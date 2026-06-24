@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>רמי לוי סטוק — רשת הסטוק הזולה במדינה</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;700;900&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      min-height: 100vh;
+      background: #ffffff;
+      font-family: 'Montserrat', Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(ellipse at center, #fdf0f7 0%, #f7d6ec 60%, #f0bde0 100%);
+      z-index: 0;
+    }
+
+    .page-wrapper {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      width: 100%;
+      padding: 40px 20px;
+    }
+
+    .top-bar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 6px;
+      background: #E91E8C;
+      z-index: 10;
+    }
+
+    .bottom-bar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 6px;
+      background: #E91E8C;
+      z-index: 10;
+    }
+
+    .card {
+      background: #ffffff;
+      border-radius: 16px;
+      box-shadow:
+        0 2px 8px rgba(233,30,140,0.08),
+        0 20px 60px rgba(233,30,140,0.15);
+      padding: 60px 80px 50px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      max-width: 580px;
+      width: 100%;
+      border-top: 5px solid #E91E8C;
+    }
+
+    .logo-wrapper {
+      width: 100%;
+      max-width: 380px;
+      margin-bottom: 40px;
+    }
+
+    .logo-wrapper img {
+      width: 100%;
+      height: auto;
+      display: block;
+      border-radius: 10px;
+    }
+
+    .divider {
+      width: 60px;
+      height: 3px;
+      background: #E91E8C;
+      margin-bottom: 28px;
+    }
+
+    .tagline {
+      font-size: 13px;
+      font-weight: 400;
+      letter-spacing: 4px;
+      color: #b06090;
+      text-transform: uppercase;
+      text-align: center;
+    }
+
+    .footer-note {
+      margin-top: 50px;
+      font-size: 11px;
+      color: #c090b0;
+      letter-spacing: 1px;
+    }
+
+    @media (max-width: 520px) {
+      .card {
+        padding: 40px 28px 36px;
+        border-radius: 10px;
+      }
+      .logo-wrapper {
+        max-width: 280px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="top-bar"></div>
+  <div class="bottom-bar"></div>
+
+  <div class="page-wrapper">
+    <div class="card">
+      <div class="logo-wrapper">
+        <img src="logo.png" alt="רמי לוי סטוק — רשת הסטוק הזולה במדינה">
+      </div>
+      <div class="divider"></div>
+      <p class="tagline">Coming Soon</p>
+    </div>
+    <p class="footer-note">כל הזכויות שמורות .רמי לוי סטוק 2026 ©</p>
+  </div>
+</body>
+</html>
