@@ -3,31 +3,24 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="icon" type="image/png" sizes="96x96" href="favicon.png">
   <title>רמי לוי סטוק — רשת הסטוק הזולה במדינה</title>
   <meta name="description" content="רמי לוי סטוק — רשת הסטוק הזולה במדינה. האתר יעלה בקרוב.">
+  <link rel="icon" type="image/png" sizes="96x96" href="favicon.png">
 
   <style>
-    *, *::before, *::after {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-    html {
-      font-size: 100%;
-    }
+    html { font-size: 100%; }
 
     body {
       min-height: 100vh;
-      background: #f9e3f1;
       font-family: Arial, Helvetica, sans-serif;
       color: #222;
+      background: radial-gradient(ellipse at center, #fdf0f7 0%, #f7d6ec 60%, #f0bde0 100%);
       line-height: 1.5;
     }
 
-    .top-bar,
-    .bottom-bar {
+    .top-bar, .bottom-bar {
       position: fixed;
       left: 0;
       width: 100%;
@@ -36,13 +29,8 @@
       z-index: 10;
     }
 
-    .top-bar {
-      top: 0;
-    }
-
-    .bottom-bar {
-      bottom: 0;
-    }
+    .top-bar { top: 0; }
+    .bottom-bar { bottom: 0; }
 
     .page-wrapper {
       min-height: 100vh;
@@ -53,11 +41,10 @@
       align-items: center;
       justify-content: center;
       text-align: center;
-      background: radial-gradient(ellipse at center, #fdf0f7 0%, #f7d6ec 60%, #f0bde0 100%);
     }
 
     .card {
-      background: #ffffff;
+      background: #fff;
       border-radius: 16px;
       box-shadow: 0 20px 60px rgba(120, 20, 80, 0.18);
       padding: 56px 72px 46px;
@@ -105,40 +92,132 @@
     .footer-links {
       margin-top: 10px;
       display: flex;
-      flex-wrap: wrap;
       justify-content: center;
       gap: 8px 12px;
+      flex-wrap: wrap;
     }
 
-    a {
+    .link-button {
+      border: 0;
+      background: none;
       color: #6b1648;
       text-decoration: underline;
       text-underline-offset: 3px;
+      font: inherit;
+      cursor: pointer;
     }
 
-    a:focus-visible {
+    button:focus-visible,
+    .link-button:focus-visible {
       outline: 3px solid #222;
       outline-offset: 4px;
-      border-radius: 4px;
+      border-radius: 6px;
     }
 
+    .accessibility-button {
+      position: fixed;
+      right: 18px;
+      bottom: 22px;
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      border: 0;
+      background: #E91E8C;
+      color: #fff;
+      font-size: 25px;
+      cursor: pointer;
+      box-shadow: 0 10px 30px rgba(120, 20, 80, 0.3);
+      z-index: 50;
+    }
+
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(30, 10, 25, 0.45);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      z-index: 100;
+    }
+
+    .modal-overlay.active { display: flex; }
+
+    .modal {
+      background: #fff;
+      width: min(92vw, 760px);
+      max-height: calc(100vh - 80px);
+      overflow: hidden;
+      border-radius: 22px;
+      text-align: right;
+      box-shadow: 0 25px 80px rgba(0,0,0,0.28);
+      position: relative;
+      animation: pop 0.18s ease-out;
+    }
+
+    @keyframes pop {
+      from { transform: scale(0.96); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+
+    .modal-inner {
+      padding: 34px 36px 30px;
+      max-height: calc(100vh - 80px);
+      overflow-y: auto;
+    }
+
+    .close-modal {
+      position: absolute;
+      top: 14px;
+      left: 14px;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      border: 0;
+      background: #f7d6ec;
+      color: #6b1648;
+      font-size: 22px;
+      cursor: pointer;
+      z-index: 2;
+    }
+
+    .modal h2 {
+      color: #E91E8C;
+      margin: 0 0 18px 44px;
+      font-size: 1.5rem;
+    }
+
+    .modal p { margin-bottom: 14px; }
+
+    .modal strong { font-weight: 700; }
+
     @media (max-width: 520px) {
+      .page-wrapper { padding-inline: 16px; }
+
       .card {
         padding: 36px 24px 32px;
         border-radius: 12px;
       }
 
-      .logo {
-        max-width: 280px;
-      }
+      .logo { max-width: 280px; }
 
-      h1 {
-        font-size: 1.1rem;
-      }
+      h1 { font-size: 1.1rem; }
 
       .tagline {
         font-size: 0.95rem;
         letter-spacing: 0.12em;
+      }
+
+      .modal-overlay { padding: 14px; }
+
+      .modal {
+        width: 100%;
+        max-height: calc(100vh - 40px);
+      }
+
+      .modal-inner {
+        padding: 28px 20px 24px;
+        max-height: calc(100vh - 40px);
       }
     }
   </style>
@@ -150,28 +229,91 @@
 
   <main class="page-wrapper">
     <section class="card" aria-labelledby="main-title">
-      <img
-        class="logo"
-        src="logo.png"
-        alt="רמי לוי סטוק — רשת הסטוק הזולה במדינה"
-      >
-
+      <img class="logo" src="logo.png" alt="רמי לוי סטוק — רשת הסטוק הזולה במדינה">
       <div class="divider" aria-hidden="true"></div>
-
-      <h1 id="main-title">רמי לוי סטוק</h1>
       <p class="tagline">Coming Soon</p>
     </section>
 
-<footer class="footer">
-    <p>© 2026 רמי לוי סטוק. כל הזכויות שמורות.</p>
-
-    <nav class="footer-links" aria-label="קישורים משפטיים">
-        <a href="privacy.html">מדיניות פרטיות</a>
+    <footer class="footer">
+      <p>© 2026 רמי לוי סטוק. כל הזכויות שמורות.</p>
+      <nav class="footer-links" aria-label="קישורים משפטיים">
+        <button class="link-button" type="button" data-modal="privacy">מדיניות פרטיות</button>
         <span aria-hidden="true">|</span>
-        <a href="accessibility.html">הצהרת נגישות</a>
-    </nav>
-</footer>
-    
+        <button class="link-button" type="button" data-modal="accessibility">הצהרת נגישות</button>
+      </nav>
+    </footer>
   </main>
+
+  <button class="accessibility-button" type="button" data-modal="accessibility" aria-label="פתיחת הצהרת נגישות">♿</button>
+
+  <div class="modal-overlay" id="privacy" role="dialog" aria-modal="true" aria-labelledby="privacy-title">
+    <div class="modal">
+      <button class="close-modal" type="button" aria-label="סגירת חלון">×</button>
+      <div class="modal-inner">
+        <h2 id="privacy-title">מדיניות פרטיות</h2>
+        <p>רמי לוי סטוק מכבדת את פרטיות המשתמשים באתר.</p>
+        <p>נכון למועד פרסום מדיניות זו, האתר משמש כדף מידע בלבד ואינו כולל הרשמת משתמשים, טפסי יצירת קשר, אזורים אישיים או אפשרות להזין מידע אישי.</p>
+        <p>האתר אינו עושה שימוש בקובצי Cookies לצורך פרסום, שיווק או מעקב אחר משתמשים.</p>
+        <p>האתר אינו עושה שימוש בכלי אנליטיקה, שירותי פרסום או טכנולוגיות מעקב של צדדים שלישיים.</p>
+        <p>ככל שבעתיד יתווספו שירותים חדשים הכרוכים באיסוף מידע אישי, מדיניות פרטיות זו תעודכן בהתאם.</p>
+        <p><strong>עודכן לאחרונה:</strong> יוני 2026</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="accessibility" role="dialog" aria-modal="true" aria-labelledby="accessibility-title">
+    <div class="modal">
+      <button class="close-modal" type="button" aria-label="סגירת חלון">×</button>
+      <div class="modal-inner">
+        <h2 id="accessibility-title">הצהרת נגישות</h2>
+        <p>רמי לוי סטוק פועלת לקידום הנגישות באתר האינטרנט ולהנגשת השירותים הניתנים באמצעותו, בהתאם להוראות הדין ולתקן הישראלי לנגישות אתרי אינטרנט ככל שהוא חל.</p>
+        <p>האתר נבנה תוך שימוש במבנה HTML תקני, תמיכה בשפה העברית, טקסט חלופי לתמונות, ניגודיות צבעים, התאמה למכשירים ניידים ותמיכה בניווט באמצעות מקלדת.</p>
+        <p>האתר בשלב זה הוא דף מידע זמני בלבד ואינו כולל טפסים, אזור אישי או פעולות משתמש מורכבות.</p>
+        <p>אנו ממשיכים לפעול לשיפור נגישות האתר באופן שוטף.</p>
+        <p><strong>עודכן לאחרונה:</strong> יוני 2026</p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const openButtons = document.querySelectorAll('[data-modal]');
+    const overlays = document.querySelectorAll('.modal-overlay');
+    let lastFocusedElement = null;
+
+    openButtons.forEach(button => {
+      button.addEventListener('click', () => {
+        const modalId = button.getAttribute('data-modal');
+        const modal = document.getElementById(modalId);
+        if (!modal) return;
+
+        lastFocusedElement = button;
+        modal.classList.add('active');
+        document.body.style.overflow = 'hidden';
+        modal.querySelector('.close-modal').focus();
+      });
+    });
+
+    overlays.forEach(overlay => {
+      const closeButton = overlay.querySelector('.close-modal');
+      closeButton.addEventListener('click', () => closeModal(overlay));
+
+      overlay.addEventListener('click', event => {
+        if (event.target === overlay) closeModal(overlay);
+      });
+    });
+
+    document.addEventListener('keydown', event => {
+      if (event.key === 'Escape') {
+        const activeModal = document.querySelector('.modal-overlay.active');
+        if (activeModal) closeModal(activeModal);
+      }
+    });
+
+    function closeModal(modal) {
+      modal.classList.remove('active');
+      document.body.style.overflow = '';
+      if (lastFocusedElement) lastFocusedElement.focus();
+    }
+  </script>
 </body>
 </html>
