@@ -3,21 +3,22 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <meta name="robots" content="noindex, nofollow, noarchive, nosnippet, noimageindex">
   <meta name="googlebot" content="noindex, nofollow, noarchive, nosnippet, noimageindex">
   <meta name="bingbot" content="noindex, nofollow, noarchive, nosnippet, noimageindex">
+
   <meta name="color-scheme" content="light">
   <title>פתיחת קריאת שירות</title>
 
   <style>
     :root {
       --brand-pink: #de3995;
-      --brand-pink-dark: #bd2678;
+      --brand-pink-dark: #b92376;
       --brand-pink-soft: #fff0f8;
-      --brand-blue: #243a76;
       --text: #171717;
-      --muted: #666b73;
-      --border: #e4e5e8;
+      --muted: #676b73;
+      --border: #e1e3e7;
       --background: #f6f6f8;
       --white: #ffffff;
       --danger: #b42318;
@@ -54,7 +55,7 @@
 
     .app {
       width: 100%;
-      max-width: 790px;
+      max-width: 820px;
       overflow: hidden;
       background: var(--white);
       border: 1px solid var(--border);
@@ -108,7 +109,6 @@
       margin: 0;
       font-size: 27px;
       line-height: 1.25;
-      color: var(--text);
     }
 
     .page-subtitle {
@@ -123,7 +123,7 @@
       padding: 18px;
       border: 1px solid var(--border);
       border-radius: 13px;
-      background: #fff;
+      background: var(--white);
     }
 
     .section-title {
@@ -200,6 +200,70 @@
       line-height: 1.5;
     }
 
+    .urgency-options {
+      display: grid;
+      gap: 9px;
+    }
+
+    .urgency-row {
+      position: relative;
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      min-height: 53px;
+      padding: 11px 13px;
+      border: 1px solid transparent;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: transform 0.12s ease, box-shadow 0.12s ease, border-color 0.12s ease;
+      overflow: hidden;
+    }
+
+    .urgency-row:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 5px 14px rgba(0, 0, 0, 0.09);
+    }
+
+    .urgency-row input {
+      width: 18px;
+      height: 18px;
+      flex: 0 0 auto;
+      margin: 0;
+      accent-color: #333;
+    }
+
+    .urgency-row strong {
+      display: block;
+      font-size: 14px;
+      margin-bottom: 2px;
+    }
+
+    .urgency-row span {
+      font-size: 12px;
+      font-weight: 400;
+      color: #424242;
+    }
+
+    .urgency-normal {
+      background: linear-gradient(90deg, #fff9c7 0%, #fff2a8 55%, #ffe985 100%);
+      border-color: #edd76f;
+    }
+
+    .urgency-high {
+      background: linear-gradient(90deg, #ffe8ca 0%, #ffc77a 55%, #ffa640 100%);
+      border-color: #e99b36;
+    }
+
+    .urgency-down {
+      background: linear-gradient(90deg, #ffd5d5 0%, #ff9999 55%, #ed5d5d 100%);
+      border-color: #d94e4e;
+    }
+
+    .urgency-row:has(input:checked) {
+      border-color: #272727;
+      box-shadow: 0 0 0 2px rgba(23, 23, 23, 0.13);
+    }
+
     .send-button {
       width: 100%;
       padding: 14px 20px;
@@ -252,12 +316,12 @@
       align-items: center;
       justify-content: center;
       padding: 18px;
-      background: rgba(17, 17, 22, 0.62);
+      background: rgba(17, 17, 22, 0.68);
     }
 
     .modal {
       width: 100%;
-      max-width: 670px;
+      max-width: 700px;
       max-height: 92vh;
       overflow-y: auto;
       background: var(--white);
@@ -280,6 +344,17 @@
       color: var(--muted);
       font-size: 13px;
       line-height: 1.5;
+    }
+
+    .modal-locked-note {
+      display: none;
+      margin-top: 10px;
+      padding: 9px 11px;
+      border-radius: 8px;
+      background: #fff3f3;
+      color: #9a2222;
+      font-size: 12px;
+      font-weight: 700;
     }
 
     .modal-body {
@@ -356,7 +431,7 @@
       color: #33353a;
     }
 
-    @media (max-width: 660px) {
+    @media (max-width: 680px) {
       body {
         padding: 10px;
         align-items: flex-start;
@@ -401,9 +476,8 @@
         flex-direction: column;
       }
 
-      .email-input-group input,
-      .email-domain {
-        border-radius: 9px;
+      .email-input-group input {
+        border-radius: 9px 9px 0 0;
       }
 
       .email-domain {
@@ -412,10 +486,6 @@
         border-top: 0;
         border-radius: 0 0 9px 9px;
       }
-
-      .email-input-group input {
-        border-radius: 9px 9px 0 0;
-      }
     }
   </style>
 </head>
@@ -423,11 +493,7 @@
 <body>
   <main class="app">
     <header class="topbar">
-      <img
-        class="logo"
-        src="/sing.png"
-        alt="רמי לוי סטוק"
-      >
+      <img class="logo" src="/sing.png" alt="רמי לוי סטוק">
       <button type="button" class="settings-button" id="openSettings">
         ⚙ הגדרות משתמש
       </button>
@@ -445,7 +511,7 @@
 
       <form id="supportForm">
         <section class="section">
-          <h2 class="section-title">פרטי הפונה</h2>
+          <h2 class="section-title">פרטי הפונה והמחשב</h2>
 
           <div class="grid">
             <div class="field">
@@ -474,13 +540,18 @@
             </div>
 
             <div class="field">
+              <label for="ipAddress">כתובת IP</label>
+              <input id="ipAddress" type="text" dir="ltr" readonly>
+            </div>
+
+            <div class="field full">
               <label for="defaultPrinter">מדפסת ברירת מחדל</label>
               <input id="defaultPrinter" type="text" readonly>
             </div>
           </div>
 
           <p class="profile-note">
-            לשינוי אחד מהפרטים יש ללחוץ על כפתור „הגדרות משתמש” בראש הדף.
+            לשינוי הפרטים יש ללחוץ על „הגדרות משתמש” בראש הדף.
           </p>
         </section>
 
@@ -507,14 +578,35 @@
             </div>
 
             <div class="field">
-              <label for="urgency">
+              <label>
                 דחיפות <span class="required">*</span>
               </label>
-              <select id="urgency" required>
-                <option value="רגילה">רגילה – ניתן להמשיך לעבוד</option>
-                <option value="גבוהה">גבוהה – העבודה נפגעה משמעותית</option>
-                <option value="משבית">משבית – לא ניתן לעבוד</option>
-              </select>
+
+              <div class="urgency-options" role="radiogroup" aria-label="דחיפות">
+                <label class="urgency-row urgency-normal">
+                  <input type="radio" name="urgency" value="רגילה" checked required>
+                  <span>
+                    <strong>רגילה</strong>
+                    ניתן להמשיך לעבוד
+                  </span>
+                </label>
+
+                <label class="urgency-row urgency-high">
+                  <input type="radio" name="urgency" value="גבוהה" required>
+                  <span>
+                    <strong>גבוהה</strong>
+                    העבודה נפגעה משמעותית
+                  </span>
+                </label>
+
+                <label class="urgency-row urgency-down">
+                  <input type="radio" name="urgency" value="משבית" required>
+                  <span>
+                    <strong>משבית</strong>
+                    לא ניתן לעבוד
+                  </span>
+                </label>
+              </div>
             </div>
 
             <div class="field full">
@@ -535,7 +627,7 @@
         </button>
 
         <div class="notice">
-          לאחר לחיצה על כפתור „שלח קריאה” תיפתח אוטומטית הודעה חדשה באאוטלוק עם כל הפרטים שמילאתם. ניתן לצרף צילום מסך או קובץ, ולאחר מכן ללחוץ על „שלח” באאוטלוק.
+          לאחר לחיצה על „שלח קריאה” תיפתח אוטומטית הודעה חדשה באאוטלוק עם כל הפרטים. ניתן לצרף צילום מסך או קובץ, ולאחר מכן ללחוץ על „שלח” באאוטלוק.
         </div>
       </form>
     </div>
@@ -545,7 +637,10 @@
     <div class="modal" role="dialog" aria-modal="true" aria-labelledby="settingsTitle">
       <div class="modal-header">
         <h2 id="settingsTitle">הגדרות משתמש</h2>
-        <p>יש למלא את הפרטים בהפעלה הראשונה. ניתן לחזור למסך זה בכל עת.</p>
+        <p>יש למלא את כל הפרטים וללחוץ על „שמור הגדרות”.</p>
+        <div class="modal-locked-note" id="modalLockedNote">
+          בהפעלה הראשונה לא ניתן לסגור את החלון לפני שכל השדות מולאו ונשמרו.
+        </div>
       </div>
 
       <div class="modal-body">
@@ -561,7 +656,15 @@
             <label for="settingsPhone">
               טלפון <span class="required">*</span>
             </label>
-            <input id="settingsPhone" type="tel" inputmode="tel" autocomplete="tel">
+            <input
+              id="settingsPhone"
+              type="tel"
+              dir="ltr"
+              inputmode="numeric"
+              autocomplete="tel"
+              maxlength="12"
+              placeholder="XXX-XXX-XXXX"
+            >
           </div>
 
           <div class="field">
@@ -600,17 +703,30 @@
           </div>
 
           <div class="field">
-            <label for="settingsPrinter">
-              מדפסת ברירת מחדל
+            <label for="settingsIp">
+              כתובת IP <span class="required">*</span>
             </label>
-            <input id="settingsPrinter" type="text">
+            <input id="settingsIp" type="text" dir="ltr" placeholder="10.1.10.25">
           </div>
 
-          <div class="field full">
-            <label for="settingsAnyDesk">
-              מספר AnyDesk
+          <div class="field">
+            <label for="settingsPrinter">
+              מדפסת ברירת מחדל <span class="required">*</span>
             </label>
-            <input id="settingsAnyDesk" type="text" dir="ltr" inputmode="numeric">
+            <input id="settingsPrinter" type="text" placeholder="אם אין, רשמו ללא">
+          </div>
+
+          <div class="field">
+            <label for="settingsAnyDesk">
+              מספר AnyDesk <span class="required">*</span>
+            </label>
+            <input
+              id="settingsAnyDesk"
+              type="text"
+              dir="ltr"
+              inputmode="numeric"
+              placeholder="אם אין, רשמו אין"
+            >
           </div>
         </div>
 
@@ -629,28 +745,20 @@
   </div>
 
   <script>
-    /*
-      ==========================================================
-      הגדרות מנהל המערכת
-      ==========================================================
-    */
-
     const SUPPORT_EMAIL = "support@Rami-Levy-Stock.co.il";
     const CC_EMAIL = "eran@Rami-Levy-Stock.co.il";
     const COMPANY_DOMAIN = "Rami-Levy-Stock.co.il";
-
-    /*
-      ==========================================================
-      אין צורך לשנות דבר מתחת לשורה זו
-      ==========================================================
-    */
-
-    const STORAGE_KEY = "ramiLevyStockSupportSettingsV2";
+    const STORAGE_KEY = "ramiLevyStockSupportSettingsV4";
 
     const form = document.getElementById("supportForm");
     const modal = document.getElementById("settingsModal");
     const settingsError = document.getElementById("settingsError");
     const configurationError = document.getElementById("configurationError");
+    const closeSettingsButton = document.getElementById("closeSettings");
+    const modalLockedNote = document.getElementById("modalLockedNote");
+    const phoneInput = document.getElementById("settingsPhone");
+
+    let settingsLocked = false;
 
     function clean(value) {
       return String(value || "").trim();
@@ -675,6 +783,28 @@
 
       return digits.slice(0, 3) + "-" +
              digits.slice(3, 6) + "-" +
+             digits.slice(6, 10);
+    }
+
+    function formatPhoneWhileTyping(value) {
+      let digits = String(value || "").replace(/\D/g, "");
+
+      if (digits.startsWith("972") && digits.length > 9) {
+        digits = "0" + digits.slice(3);
+      }
+
+      digits = digits.slice(0, 10);
+
+      if (digits.length <= 3) {
+        return digits;
+      }
+
+      if (digits.length <= 6) {
+        return digits.slice(0, 3) + "-" + digits.slice(3);
+      }
+
+      return digits.slice(0, 3) + "-" +
+             digits.slice(3, 6) + "-" +
              digits.slice(6);
     }
 
@@ -685,64 +815,9 @@
         prefix = prefix.split("@")[0];
       }
 
-      prefix = prefix
+      return prefix
         .replace(/\s+/g, "")
         .replace(/[^a-z0-9._-]/g, "");
-
-      return prefix;
-    }
-
-    function normalizeAnyDesk(value) {
-      return String(value || "").replace(/[^\d]/g, "");
-    }
-
-
-    function getLaunchData() {
-      const rawHash = window.location.hash.startsWith("#")
-        ? window.location.hash.slice(1)
-        : "";
-
-      const params = new URLSearchParams(rawHash);
-
-      return {
-        computerName: clean(params.get("computer")),
-        emailPrefix: normalizeEmailPrefix(params.get("email")),
-        branchCode: clean(params.get("branch")).toLowerCase(),
-        printer: clean(params.get("printer"))
-      };
-    }
-
-    function getBranchName(branchCode) {
-      const branches = {
-        "pardes-hana": "פרדס חנה",
-        "ramla": "רמלה",
-        "remote": "מרוחק"
-      };
-
-      return branches[branchCode] || "";
-    }
-
-    function mergeLaunchData(settings, launchData) {
-      const merged = { ...settings };
-
-      if (launchData.computerName) {
-        merged.computerName = launchData.computerName;
-      }
-
-      if (launchData.emailPrefix) {
-        merged.emailPrefix = launchData.emailPrefix;
-      }
-
-      const branchName = getBranchName(launchData.branchCode);
-      if (branchName) {
-        merged.branch = branchName;
-      }
-
-      if (launchData.printer) {
-        merged.printer = launchData.printer;
-      }
-
-      return merged;
     }
 
     function getSavedSettings() {
@@ -761,13 +836,57 @@
       return prefix ? prefix + "@" + COMPANY_DOMAIN : "";
     }
 
+    function getBranchName(branchCode) {
+      const branches = {
+        "pardes-hana": "פרדס חנה",
+        "ramla": "רמלה",
+        "remote": "מרוחק"
+      };
+
+      return branches[clean(branchCode).toLowerCase()] || "";
+    }
+
+    function getLaunchData() {
+      const rawHash = window.location.hash.startsWith("#")
+        ? window.location.hash.slice(1)
+        : "";
+
+      const params = new URLSearchParams(rawHash);
+
+      return {
+        name: clean(params.get("name")),
+        phone: normalizePhone(params.get("phone")),
+        branch: getBranchName(params.get("branch")),
+        emailPrefix: normalizeEmailPrefix(params.get("email")),
+        computerName: clean(params.get("computer")),
+        ip: clean(params.get("ip")),
+        printer: clean(params.get("printer")),
+        anyDesk: clean(params.get("anydesk"))
+      };
+    }
+
+    function mergeLaunchData(settings, launchData) {
+      const merged = { ...settings };
+
+      Object.keys(launchData).forEach(function (key) {
+        if (launchData[key]) {
+          merged[key] = launchData[key];
+        }
+      });
+
+      return merged;
+    }
+
     function hasRequiredSettings(settings) {
       return Boolean(
         settings.name &&
         settings.phone &&
         settings.branch &&
         settings.emailPrefix &&
-        settings.computerName
+        settings.computerName &&
+        settings.ip &&
+        settings.printer &&
+        settings.anyDesk
       );
     }
 
@@ -779,36 +898,50 @@
         getFullEmail(settings.emailPrefix);
       document.getElementById("computerName").value =
         settings.computerName || "";
+      document.getElementById("ipAddress").value =
+        settings.ip || "";
       document.getElementById("defaultPrinter").value =
-        settings.printer || "לא הוגדרה";
+        settings.printer || "";
     }
 
     function fillSettingsModal(settings) {
-      document.getElementById("settingsName").value =
-        settings.name || "";
-      document.getElementById("settingsPhone").value =
-        settings.phone || "";
-      document.getElementById("settingsBranch").value =
-        settings.branch || "";
+      document.getElementById("settingsName").value = settings.name || "";
+      document.getElementById("settingsPhone").value = settings.phone || "";
+      document.getElementById("settingsBranch").value = settings.branch || "";
       document.getElementById("settingsEmailPrefix").value =
         settings.emailPrefix || "";
       document.getElementById("settingsComputerName").value =
         settings.computerName || "";
+      document.getElementById("settingsIp").value = settings.ip || "";
       document.getElementById("settingsPrinter").value =
         settings.printer || "";
       document.getElementById("settingsAnyDesk").value =
         settings.anyDesk || "";
     }
 
-    function openSettings() {
+    function setModalLock(locked) {
+      settingsLocked = locked;
+      closeSettingsButton.style.display = locked ? "none" : "inline-block";
+      modalLockedNote.style.display = locked ? "block" : "none";
+    }
+
+    function openSettings(forceLocked) {
       settingsError.style.display = "none";
       settingsError.textContent = "";
-      fillSettingsModal(getSavedSettings());
+
+      const settings = getSavedSettings();
+      fillSettingsModal(settings);
+
+      setModalLock(Boolean(forceLocked) || !hasRequiredSettings(settings));
       modal.style.display = "flex";
       document.getElementById("settingsName").focus();
     }
 
     function closeSettings() {
+      if (settingsLocked) {
+        return;
+      }
+
       modal.style.display = "none";
     }
 
@@ -817,99 +950,125 @@
       settingsError.style.display = "block";
     }
 
-    document.getElementById("openSettings").addEventListener("click", openSettings);
-    document.getElementById("closeSettings").addEventListener("click", closeSettings);
+    phoneInput.addEventListener("input", function () {
+      phoneInput.value = formatPhoneWhileTyping(phoneInput.value);
+    });
+
+    document.getElementById("settingsEmailPrefix")
+      .addEventListener("input", function (event) {
+        event.target.value = normalizeEmailPrefix(event.target.value);
+      });
+
+    document.getElementById("openSettings")
+      .addEventListener("click", function () {
+        openSettings(false);
+      });
+
+    closeSettingsButton.addEventListener("click", closeSettings);
 
     modal.addEventListener("click", function (event) {
-      if (event.target === modal) {
+      if (event.target === modal && !settingsLocked) {
         closeSettings();
       }
     });
 
     document.addEventListener("keydown", function (event) {
-      if (event.key === "Escape" && modal.style.display === "flex") {
+      if (
+        event.key === "Escape" &&
+        modal.style.display === "flex" &&
+        !settingsLocked
+      ) {
         closeSettings();
       }
     });
 
-    document.getElementById("saveSettings").addEventListener("click", function () {
-      const name = clean(document.getElementById("settingsName").value);
-      const phone = normalizePhone(
-        document.getElementById("settingsPhone").value
-      );
-      const branch = clean(
-        document.getElementById("settingsBranch").value
-      );
-      const emailPrefix = normalizeEmailPrefix(
-        document.getElementById("settingsEmailPrefix").value
-      );
-      const computerName = clean(
-        document.getElementById("settingsComputerName").value
-      );
-      const printer = clean(
-        document.getElementById("settingsPrinter").value
-      );
-      const anyDesk = normalizeAnyDesk(
-        document.getElementById("settingsAnyDesk").value
-      );
+    document.getElementById("saveSettings")
+      .addEventListener("click", function () {
+        const settings = {
+          name: clean(document.getElementById("settingsName").value),
+          phone: normalizePhone(
+            document.getElementById("settingsPhone").value
+          ),
+          branch: clean(
+            document.getElementById("settingsBranch").value
+          ),
+          emailPrefix: normalizeEmailPrefix(
+            document.getElementById("settingsEmailPrefix").value
+          ),
+          computerName: clean(
+            document.getElementById("settingsComputerName").value
+          ),
+          ip: clean(
+            document.getElementById("settingsIp").value
+          ),
+          printer: clean(
+            document.getElementById("settingsPrinter").value
+          ),
+          anyDesk: clean(
+            document.getElementById("settingsAnyDesk").value
+          )
+        };
 
-      if (!name) {
-        showSettingsError("יש למלא שם מלא.");
-        return;
-      }
+        if (!settings.name) {
+          showSettingsError("יש למלא שם מלא.");
+          return;
+        }
 
-      if (!phone) {
-        showSettingsError("מספר הטלפון שהוזן אינו תקין.");
-        return;
-      }
+        if (!settings.phone) {
+          showSettingsError("יש להזין מספר טלפון בפורמט XXX-XXX-XXXX.");
+          return;
+        }
 
-      if (!branch) {
-        showSettingsError("יש לבחור סניף.");
-        return;
-      }
+        if (!settings.branch) {
+          showSettingsError("יש לבחור סניף.");
+          return;
+        }
 
-      if (!emailPrefix) {
-        showSettingsError("יש למלא כתובת דואר אלקטרוני.");
-        return;
-      }
+        if (!settings.emailPrefix) {
+          showSettingsError("יש למלא את קידומת כתובת הדואר האלקטרוני.");
+          return;
+        }
 
-      if (!computerName) {
-        showSettingsError("יש למלא שם מחשב.");
-        return;
-      }
+        if (!settings.computerName) {
+          showSettingsError("יש למלא שם מחשב.");
+          return;
+        }
 
-      const settings = {
-        name,
-        phone,
-        branch,
-        emailPrefix,
-        computerName,
-        printer,
-        anyDesk
-      };
+        if (!settings.ip) {
+          showSettingsError("יש למלא כתובת IP.");
+          return;
+        }
 
-      saveSettingsLocally(settings);
-      applySettings(settings);
-      closeSettings();
-    });
+        if (!settings.printer) {
+          showSettingsError("יש למלא מדפסת ברירת מחדל. אם אין, רשמו ללא.");
+          return;
+        }
+
+        if (!settings.anyDesk) {
+          showSettingsError("יש למלא מספר AnyDesk. אם אין, רשמו אין.");
+          return;
+        }
+
+        saveSettingsLocally(settings);
+        applySettings(settings);
+
+        setModalLock(false);
+        modal.style.display = "none";
+      });
 
     form.addEventListener("submit", function (event) {
       event.preventDefault();
       configurationError.style.display = "none";
 
-      if (!SUPPORT_EMAIL || SUPPORT_EMAIL.includes("your-it-company")) {
+      if (!SUPPORT_EMAIL) {
         configurationError.style.display = "block";
-        configurationError.scrollIntoView({
-          behavior: "smooth",
-          block: "center"
-        });
         return;
       }
 
       const settings = getSavedSettings();
 
       if (!hasRequiredSettings(settings)) {
-        openSettings();
+        openSettings(true);
         return;
       }
 
@@ -918,9 +1077,16 @@
       }
 
       const category = clean(document.getElementById("category").value);
-      const urgency = clean(document.getElementById("urgency").value);
-      const description = clean(document.getElementById("description").value);
+      const urgencyInput =
+        document.querySelector('input[name="urgency"]:checked');
+      const urgency = urgencyInput ? urgencyInput.value : "";
+      const description =
+        clean(document.getElementById("description").value);
       const fullEmail = getFullEmail(settings.emailPrefix);
+
+      if (!urgency) {
+        return;
+      }
 
       const dateTime = new Intl.DateTimeFormat("he-IL", {
         dateStyle: "short",
@@ -945,8 +1111,9 @@
         "דואר אלקטרוני: " + fullEmail,
         "סניף: " + settings.branch,
         "שם מחשב: " + settings.computerName,
-        "מדפסת ברירת מחדל: " + (settings.printer || "לא הוגדרה"),
-        "מספר AnyDesk: " + (settings.anyDesk || "לא הוגדר"),
+        "כתובת IP: " + settings.ip,
+        "מדפסת ברירת מחדל: " + settings.printer,
+        "מספר AnyDesk: " + settings.anyDesk,
         "סוג התקלה: " + category,
         "דחיפות: " + urgency,
         "תאריך ושעה: " + dateTime,
@@ -970,12 +1137,12 @@
     });
 
     const launchData = getLaunchData();
-    const savedSettings = mergeLaunchData(getSavedSettings(), launchData);
+    const savedSettings =
+      mergeLaunchData(getSavedSettings(), launchData);
 
     saveSettingsLocally(savedSettings);
     applySettings(savedSettings);
 
-    // Remove the local device data from the visible address after importing it.
     if (window.location.hash) {
       history.replaceState(
         null,
@@ -985,7 +1152,7 @@
     }
 
     if (!hasRequiredSettings(savedSettings)) {
-      openSettings();
+      openSettings(true);
     }
   </script>
 </body>
