@@ -854,6 +854,7 @@
       const params = new URLSearchParams(rawHash);
 
       return {
+        mode: clean(params.get("mode")).toLowerCase(),
         name: clean(params.get("name")),
         phone: normalizePhone(params.get("phone")),
         branch: getBranchName(params.get("branch")),
@@ -867,8 +868,18 @@
 
     function mergeLaunchData(settings, launchData) {
       const merged = { ...settings };
+      const settingKeys = [
+        "name",
+        "phone",
+        "branch",
+        "emailPrefix",
+        "computerName",
+        "ip",
+        "printer",
+        "anyDesk"
+      ];
 
-      Object.keys(launchData).forEach(function (key) {
+      settingKeys.forEach(function (key) {
         if (launchData[key]) {
           merged[key] = launchData[key];
         }
@@ -1137,6 +1148,7 @@
     });
 
     const launchData = getLaunchData();
+    const requestedMode = launchData.mode;
     const savedSettings =
       mergeLaunchData(getSavedSettings(), launchData);
 
@@ -1153,6 +1165,8 @@
 
     if (!hasRequiredSettings(savedSettings)) {
       openSettings(true);
+    } else if (requestedMode === "settings") {
+      openSettings(false);
     }
   </script>
 </body>
