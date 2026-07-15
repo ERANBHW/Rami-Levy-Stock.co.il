@@ -285,17 +285,17 @@
         <span class="hub-btn-icon">📋</span>
         פתיחת קריאה
       </button>
-      <button class="hub-btn" onclick="showView('mytickets')">
-        <span class="hub-btn-icon">📊</span>
-        הקריאות שלי
+      <button class="hub-btn" onclick="showTicketsByStatus('open')">
+        <span class="hub-btn-icon">🟡</span>
+        קריאות פתוחות
       </button>
-      <button class="hub-btn" onclick="showView('sig')">
-        <span class="hub-btn-icon">✍️</span>
-        מחולל חתימות
+      <button class="hub-btn" onclick="showTicketsByStatus('progress')">
+        <span class="hub-btn-icon">🔵</span>
+        בטיפול
       </button>
-      <button class="hub-btn" onclick="openSettings(false)">
-        <span class="hub-btn-icon">⚙️</span>
-        הגדרות
+      <button class="hub-btn" onclick="showTicketsByStatus('closed')">
+        <span class="hub-btn-icon">🟢</span>
+        סגורות
       </button>
     </div>
   </div>
@@ -400,8 +400,8 @@
     </div>
   </header>
   <div class="content">
-    <h1 class="page-title">הקריאות שלי</h1>
-    <p class="page-subtitle">כל קריאות השירות שפתחת</p>
+    <h1 class="page-title" id="ticketsPageTitle">קריאות</h1>
+    <p class="page-subtitle" id="ticketsPageSubtitle">כל קריאות השירות</p>
     <div id="ticketsList"><div class="tickets-loading">טוען קריאות...</div></div>
   </div>
 </main>
@@ -443,6 +443,8 @@
   var STORAGE_KEY     = 'ramiLevyStockSupportSettingsV4';
 
   // ── NAVIGATION ────────────────────────────────────────────
+  var currentTicketFilter = null;
+
   function showView(id) {
     document.querySelectorAll('.app').forEach(function(el) { el.classList.remove('active'); });
     var t = document.getElementById('view-' + id);
@@ -453,6 +455,11 @@
     }
     if (id === 'hub') loadHubStats();
     if (id === 'mytickets') loadMyTickets();
+  }
+
+  function showTicketsByStatus(status) {
+    currentTicketFilter = status;
+    showView('mytickets');
   }
 
   function openNewTicket() {
@@ -724,6 +731,12 @@
   async function loadMyTickets() {
     var container = document.getElementById('ticketsList');
     container.innerHTML = '<div class="tickets-loading">טוען קריאות...</div>';
+
+    var statusMap = { open: 'פתוח', progress: 'בטיפול', closed: 'סגור' };
+    var statusLabel = statusMap[currentTicketFilter] || 'כל הקריאות';
+    document.getElementById('ticketsPageTitle').textContent = statusLabel;
+    document.getElementById('ticketsPageSubtitle').textContent = 'מסננת קריאות לפי סטטוס: ' + statusLabel;
+
     var s = getSaved();
     var email = getFullEmail(s.emailPrefix);
     if (!email || !APPS_SCRIPT_URL) {
@@ -732,12 +745,28 @@
     try {
       var res = await fetch(APPS_SCRIPT_URL + '?email=' + encodeURIComponent(email));
       var tickets = await res.json();
-      if (!Array.isArray(tickets) || !tickets.length) {
-        container.innerHTML = '<div class="tickets-loading">לא נמצאו קריאות.</div>'; return;
+      if (!Array.isArray(tickets)) {
+        container.innerHTML = '<div class="tickets-loading">שגיאה בטעינת הקריאות.</div>'; return;
       }
+
+      var filtered = tickets;
+      if (currentTicketFilter) {
+        filtered = tickets.filter(function(t) {
+          if (currentTicketFilter === 'open') return t.status === 'פתוח';
+          if (currentTicketFilter === 'progress') return t.status === 'בטיפול';
+          if (currentTicketFilter === 'closed') return t.status === 'סגור';
+          return true;
+        });
+      }
+
+      if (!filtered.length) {
+        container.innerHTML = '<div class="tickets-loading">לא נמצאו קריאות ' + (statusLabel !== 'כל הקריאות' ? 'בסטטוס: ' + statusLabel : '') + '.</div>';
+        return;
+      }
+
       var list = document.createElement('div');
       list.className = 'tickets-list';
-      tickets.forEach(function(t) {
+      filtered.forEach(function(t) {
         var sc = t.status === 'סגור' ? 'status-closed' : (t.status === 'בטיפול' ? 'status-progress' : 'status-open');
         var card = document.createElement('div');
         card.className = 'ticket-card';
