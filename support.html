@@ -3,14 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
   <meta name="robots" content="noindex, nofollow, noarchive, nosnippet, noimageindex">
   <meta name="googlebot" content="noindex, nofollow, noarchive, nosnippet, noimageindex">
-  <meta name="bingbot" content="noindex, nofollow, noarchive, nosnippet, noimageindex">
-
   <meta name="color-scheme" content="light">
-  <title>פתיחת קריאת שירות</title>
-
+  <title>רמי לוי סטוק — מרכז שירות</title>
   <style>
     :root {
       --brand-pink: #de3995;
@@ -22,547 +18,323 @@
       --background: #f6f6f8;
       --white: #ffffff;
       --danger: #b42318;
+      --success: #0a7d4b;
+      --success-bg: #f0fdf6;
     }
-
-    * {
-      box-sizing: border-box;
-    }
-
-    html {
-      background: var(--background);
-    }
-
+    * { box-sizing: border-box; }
+    html { background: var(--background); }
     body {
-      margin: 0;
-      min-height: 100vh;
-      padding: 26px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background:
-        radial-gradient(circle at top right, rgba(222, 57, 149, 0.10), transparent 34%),
-        var(--background);
-      color: var(--text);
-      font-family: Arial, Helvetica, sans-serif;
+      margin: 0; min-height: 100vh; padding: 26px;
+      display: flex; align-items: center; justify-content: center;
+      background: radial-gradient(circle at top right, rgba(222,57,149,0.10), transparent 34%), var(--background);
+      color: var(--text); font-family: Arial, Helvetica, sans-serif;
     }
+    button, input, select, textarea { font-family: Arial, Helvetica, sans-serif; }
 
-    button,
-    input,
-    select,
-    textarea {
-      font-family: Arial, Helvetica, sans-serif;
-    }
+    /* === APP / VIEWS === */
+    .app { width: 100%; max-width: 820px; background: var(--white); border: 1px solid var(--border); border-radius: 18px; box-shadow: 0 18px 54px rgba(20,20,30,0.10); overflow: hidden; display: none; }
+    .app.active { display: block; }
 
-    .app {
-      width: 100%;
-      max-width: 820px;
-      overflow: hidden;
-      background: var(--white);
-      border: 1px solid var(--border);
-      border-radius: 18px;
-      box-shadow: 0 18px 54px rgba(20, 20, 30, 0.10);
-    }
+    /* === TOPBAR === */
+    .topbar { min-height: 104px; padding: 18px 24px; display: flex; align-items: center; justify-content: space-between; gap: 20px; background: var(--white); border-bottom: 4px solid var(--brand-pink); }
+    .logo { display: block; width: 245px; max-width: 58vw; height: auto; }
+    .topbar-actions { display: flex; gap: 10px; align-items: center; }
 
-    .topbar {
-      min-height: 104px;
-      padding: 18px 24px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 20px;
-      background: var(--white);
-      border-bottom: 4px solid var(--brand-pink);
-    }
+    /* === BUTTONS === */
+    .settings-button { min-width: 145px; padding: 11px 16px; border: 2px solid var(--brand-pink); border-radius: 10px; background: var(--white); color: var(--brand-pink-dark); font-size: 14px; font-weight: 700; cursor: pointer; transition: 0.15s ease; }
+    .settings-button:hover, .settings-button:focus-visible { background: var(--brand-pink); color: var(--white); outline: none; }
+    .back-button { padding: 9px 14px; border: 1px solid var(--border); border-radius: 9px; background: var(--white); color: var(--muted); font-size: 14px; font-weight: 600; cursor: pointer; transition: 0.15s ease; }
+    .back-button:hover { background: var(--background); color: var(--text); }
+    .send-button { width: 100%; padding: 14px 20px; border: 0; border-radius: 10px; background: var(--brand-pink); color: var(--white); font-size: 16px; font-weight: 700; cursor: pointer; box-shadow: 0 7px 18px rgba(222,57,149,0.24); transition: background 0.15s ease, transform 0.15s ease; }
+    .send-button:hover, .send-button:focus-visible { background: var(--brand-pink-dark); outline: none; transform: translateY(-1px); }
+    .send-button:disabled { background: #ccc; cursor: not-allowed; transform: none; box-shadow: none; }
 
-    .logo {
-      display: block;
-      width: 245px;
-      max-width: 58vw;
-      height: auto;
-    }
+    /* === HUB === */
+    .hub-content { padding: 40px; display: flex; flex-direction: column; gap: 28px; }
+    .hub-header { display: flex; flex-direction: column; gap: 8px; }
+    .hub-greeting { margin: 0; font-size: 28px; font-weight: 700; color: var(--text); }
+    .hub-user-info { font-size: 14px; color: var(--muted); }
 
-    .settings-button {
-      min-width: 145px;
-      padding: 11px 16px;
-      border: 2px solid var(--brand-pink);
-      border-radius: 10px;
-      background: var(--white);
-      color: var(--brand-pink-dark);
-      font-size: 14px;
-      font-weight: 700;
-      cursor: pointer;
-      transition: 0.15s ease;
-    }
+    /* Stats Grid */
+    .hub-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+    .stat-card { padding: 20px; border-radius: 12px; background: linear-gradient(135deg, #f6f6f8 0%, #fafafa 100%); border: 1px solid var(--border); display: flex; flex-direction: column; gap: 8px; text-align: center; transition: all 0.2s ease; }
+    .stat-card:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0,0,0,0.08); }
+    .stat-label { font-size: 12px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; }
+    .stat-number { font-size: 32px; font-weight: 800; background: linear-gradient(135deg, var(--brand-pink), var(--brand-pink-dark)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .stat-open .stat-number { background: linear-gradient(135deg, #f59e0b, #d97706); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .stat-progress .stat-number { background: linear-gradient(135deg, #3b82f6, #1d4ed8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .stat-closed .stat-number { background: linear-gradient(135deg, #10b981, #059669); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
 
-    .settings-button:hover,
-    .settings-button:focus-visible {
-      background: var(--brand-pink);
-      color: var(--white);
-      outline: none;
-    }
+    /* Chart Container */
+    .hub-chart-container { padding: 24px; border-radius: 12px; background: var(--white); border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; min-height: 180px; }
+    .hub-donut-chart { position: relative; width: 140px; height: 140px; margin: 0 auto; }
 
-    .content {
-      padding: 28px;
-    }
+    /* Action Buttons */
+    .hub-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .hub-btn { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; padding: 28px 20px; border: 2px solid var(--border); border-radius: 14px; background: var(--white); color: var(--text); font-size: 15px; font-weight: 700; cursor: pointer; transition: all 0.18s ease; text-align: center; }
+    .hub-btn:hover { border-color: var(--brand-pink); background: var(--brand-pink-soft); color: var(--brand-pink-dark); transform: translateY(-2px); box-shadow: 0 8px 20px rgba(222,57,149,0.16); }
+    .hub-btn-icon { font-size: 32px; line-height: 1; }
 
-    .page-title {
-      margin: 0;
-      font-size: 27px;
-      line-height: 1.25;
-    }
+    /* === CONTENT === */
+    .content { padding: 28px; }
+    .page-title { margin: 0; font-size: 27px; line-height: 1.25; }
+    .page-subtitle { margin: 7px 0 24px; color: var(--muted); font-size: 14px; line-height: 1.65; }
+    .section { margin-bottom: 23px; padding: 18px; border: 1px solid var(--border); border-radius: 13px; background: var(--white); }
+    .section-title { margin: 0 0 15px; padding-right: 10px; border-right: 4px solid var(--brand-pink); font-size: 16px; line-height: 1.3; }
+    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 17px; }
+    .field { display: flex; flex-direction: column; gap: 7px; }
+    .field.full { grid-column: 1 / -1; }
+    label { font-size: 14px; font-weight: 700; color: #242424; }
+    .required { color: var(--brand-pink-dark); }
+    input, select, textarea { width: 100%; padding: 11px 12px; border: 1px solid #cfd1d6; border-radius: 9px; background: var(--white); color: var(--text); font-size: 15px; outline: none; transition: border-color 0.15s ease, box-shadow 0.15s ease; }
+    input:focus, select:focus, textarea:focus { border-color: var(--brand-pink); box-shadow: 0 0 0 3px rgba(222,57,149,0.14); }
+    input[readonly] { background: #f8f8fa; color: #45484e; cursor: default; }
+    textarea { min-height: 155px; resize: vertical; line-height: 1.55; }
+    .profile-note { margin: 13px 0 0; color: var(--muted); font-size: 12px; line-height: 1.5; }
 
-    .page-subtitle {
-      margin: 7px 0 24px;
-      color: var(--muted);
-      font-size: 14px;
-      line-height: 1.65;
-    }
+    /* === URGENCY === */
+    .urgency-options { display: grid; gap: 9px; }
+    .urgency-row { position: relative; display: flex; align-items: center; gap: 11px; min-height: 53px; padding: 11px 13px; border: 1px solid transparent; border-radius: 10px; cursor: pointer; transition: transform 0.12s ease, box-shadow 0.12s ease; overflow: hidden; }
+    .urgency-row:hover { transform: translateY(-1px); box-shadow: 0 5px 14px rgba(0,0,0,0.09); }
+    .urgency-row input { width: 18px; height: 18px; flex: 0 0 auto; margin: 0; accent-color: #333; }
+    .urgency-row strong { display: block; font-size: 14px; margin-bottom: 2px; }
+    .urgency-row span { font-size: 12px; font-weight: 400; color: #424242; }
+    .urgency-normal { background: linear-gradient(90deg, #fff9c7 0%, #fff2a8 55%, #ffe985 100%); border-color: #edd76f; }
+    .urgency-high { background: linear-gradient(90deg, #ffe8ca 0%, #ffc77a 55%, #ffa640 100%); border-color: #e99b36; }
+    .urgency-down { background: linear-gradient(90deg, #ffd5d5 0%, #ff9999 55%, #ed5d5d 100%); border-color: #d94e4e; }
+    .urgency-row:has(input:checked) { border-color: #272727; box-shadow: 0 0 0 2px rgba(23,23,23,0.13); }
 
-    .section {
-      margin-bottom: 23px;
-      padding: 18px;
-      border: 1px solid var(--border);
-      border-radius: 13px;
-      background: var(--white);
-    }
+    /* === NOTICES === */
+    .error { display: none; margin-bottom: 15px; padding: 12px 14px; border: 1px solid #f5b7b1; border-radius: 9px; background: #fff2f0; color: var(--danger); font-size: 13px; line-height: 1.5; }
 
-    .section-title {
-      margin: 0 0 15px;
-      padding-right: 10px;
-      border-right: 4px solid var(--brand-pink);
-      font-size: 16px;
-      line-height: 1.3;
-    }
+    /* === LOADING === */
+    .loading-overlay { display: none; position: fixed; inset: 0; z-index: 2000; align-items: center; justify-content: center; background: rgba(17,17,22,0.45); }
+    .loading-overlay.visible { display: flex; }
+    .loading-box { background: var(--white); border-radius: 16px; padding: 36px 48px; text-align: center; box-shadow: 0 24px 60px rgba(0,0,0,0.22); }
+    .spinner { width: 48px; height: 48px; border: 4px solid #f3f3f3; border-top: 4px solid var(--brand-pink); border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto 16px; }
+    @keyframes spin { to { transform: rotate(360deg); } }
 
-    .grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 17px;
-    }
+    /* === CONFIRMATION === */
+    .confirmation { display: none; padding: 48px 32px; text-align: center; }
+    .confirmation.visible { display: block; }
+    .confirm-icon { font-size: 56px; margin-bottom: 16px; }
+    .confirm-title { margin: 0 0 10px; font-size: 24px; color: var(--success); }
+    .confirm-number { display: inline-block; padding: 8px 20px; border-radius: 30px; background: var(--success-bg); color: var(--success); font-size: 20px; font-weight: 700; letter-spacing: 1px; margin-bottom: 16px; }
+    .confirm-subtitle { color: var(--muted); font-size: 14px; margin-bottom: 28px; }
+    .confirm-actions { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+    .confirm-btn-primary { padding: 12px 24px; border: 0; border-radius: 10px; background: var(--brand-pink); color: var(--white); font-size: 14px; font-weight: 700; cursor: pointer; transition: background 0.15s; }
+    .confirm-btn-primary:hover { background: var(--brand-pink-dark); }
+    .confirm-btn-secondary { padding: 12px 24px; border: 1px solid var(--border); border-radius: 10px; background: var(--white); color: var(--text); font-size: 14px; font-weight: 600; cursor: pointer; transition: background 0.15s; }
+    .confirm-btn-secondary:hover { background: var(--background); }
 
-    .field {
-      display: flex;
-      flex-direction: column;
-      gap: 7px;
-    }
+    /* === MY TICKETS === */
+    .tickets-list { margin-top: 20px; display: flex; flex-direction: column; gap: 12px; }
+    .ticket-card { padding: 16px; border: 1px solid var(--border); border-radius: 12px; }
+    .ticket-card-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+    .ticket-num { font-size: 15px; font-weight: 700; }
+    .status-badge { padding: 3px 10px; border-radius: 20px; font-size: 12px; font-weight: 700; }
+    .status-open { background: #fff3cd; color: #856404; }
+    .status-progress { background: #cce5ff; color: #004085; }
+    .status-closed { background: #d4edda; color: #155724; }
+    .ticket-meta { font-size: 13px; color: var(--muted); }
+    .tickets-loading { text-align: center; padding: 40px; color: var(--muted); }
 
-    .field.full {
-      grid-column: 1 / -1;
-    }
+    /* === SIGNATURE PLACEHOLDER === */
+    .sig-placeholder { padding: 60px 40px; text-align: center; color: var(--muted); }
 
-    label {
-      font-size: 14px;
-      font-weight: 700;
-      color: #242424;
-    }
-
-    .required {
-      color: var(--brand-pink-dark);
-    }
-
-    input,
-    select,
-    textarea {
-      width: 100%;
-      padding: 11px 12px;
-      border: 1px solid #cfd1d6;
-      border-radius: 9px;
-      background: var(--white);
-      color: var(--text);
-      font-size: 15px;
-      outline: none;
-      transition: border-color 0.15s ease, box-shadow 0.15s ease;
-    }
-
-    input:focus,
-    select:focus,
-    textarea:focus {
-      border-color: var(--brand-pink);
-      box-shadow: 0 0 0 3px rgba(222, 57, 149, 0.14);
-    }
-
-    input[readonly] {
-      background: #f8f8fa;
-      color: #45484e;
-      cursor: default;
-    }
-
-    textarea {
-      min-height: 155px;
-      resize: vertical;
-      line-height: 1.55;
-    }
-
-    .profile-note {
-      margin: 13px 0 0;
-      color: var(--muted);
-      font-size: 12px;
-      line-height: 1.5;
-    }
-
-    .urgency-options {
-      display: grid;
-      gap: 9px;
-    }
-
-    .urgency-row {
-      position: relative;
-      display: flex;
-      align-items: center;
-      gap: 11px;
-      min-height: 53px;
-      padding: 11px 13px;
-      border: 1px solid transparent;
-      border-radius: 10px;
-      cursor: pointer;
-      transition: transform 0.12s ease, box-shadow 0.12s ease, border-color 0.12s ease;
-      overflow: hidden;
-    }
-
-    .urgency-row:hover {
-      transform: translateY(-1px);
-      box-shadow: 0 5px 14px rgba(0, 0, 0, 0.09);
-    }
-
-    .urgency-row input {
-      width: 18px;
-      height: 18px;
-      flex: 0 0 auto;
-      margin: 0;
-      accent-color: #333;
-    }
-
-    .urgency-row strong {
-      display: block;
-      font-size: 14px;
-      margin-bottom: 2px;
-    }
-
-    .urgency-row span {
-      font-size: 12px;
-      font-weight: 400;
-      color: #424242;
-    }
-
-    .urgency-normal {
-      background: linear-gradient(90deg, #fff9c7 0%, #fff2a8 55%, #ffe985 100%);
-      border-color: #edd76f;
-    }
-
-    .urgency-high {
-      background: linear-gradient(90deg, #ffe8ca 0%, #ffc77a 55%, #ffa640 100%);
-      border-color: #e99b36;
-    }
-
-    .urgency-down {
-      background: linear-gradient(90deg, #ffd5d5 0%, #ff9999 55%, #ed5d5d 100%);
-      border-color: #d94e4e;
-    }
-
-    .urgency-row:has(input:checked) {
-      border-color: #272727;
-      box-shadow: 0 0 0 2px rgba(23, 23, 23, 0.13);
-    }
-
-    .send-button {
-      width: 100%;
-      padding: 14px 20px;
-      border: 0;
-      border-radius: 10px;
-      background: var(--brand-pink);
-      color: var(--white);
-      font-size: 16px;
-      font-weight: 700;
-      cursor: pointer;
-      box-shadow: 0 7px 18px rgba(222, 57, 149, 0.24);
-      transition: background 0.15s ease, transform 0.15s ease;
-    }
-
-    .send-button:hover,
-    .send-button:focus-visible {
-      background: var(--brand-pink-dark);
-      outline: none;
-      transform: translateY(-1px);
-    }
-
-    .notice {
-      margin-top: 15px;
-      padding: 13px 15px;
-      border: 1px solid #f2bad8;
-      border-radius: 10px;
-      background: var(--brand-pink-soft);
-      color: #61304b;
-      font-size: 13px;
-      line-height: 1.6;
-    }
-
-    .error {
-      display: none;
-      margin-bottom: 15px;
-      padding: 12px 14px;
-      border: 1px solid #f5b7b1;
-      border-radius: 9px;
-      background: #fff2f0;
-      color: var(--danger);
-      font-size: 13px;
-      line-height: 1.5;
-    }
-
-    .modal-backdrop {
-      position: fixed;
-      inset: 0;
-      z-index: 1000;
-      display: none;
-      align-items: center;
-      justify-content: center;
-      padding: 18px;
-      background: rgba(17, 17, 22, 0.68);
-    }
-
-    .modal {
-      width: 100%;
-      max-width: 700px;
-      max-height: 92vh;
-      overflow-y: auto;
-      background: var(--white);
-      border-radius: 16px;
-      box-shadow: 0 24px 70px rgba(0, 0, 0, 0.28);
-    }
-
-    .modal-header {
-      padding: 21px 23px 17px;
-      border-bottom: 4px solid var(--brand-pink);
-    }
-
-    .modal-header h2 {
-      margin: 0;
-      font-size: 22px;
-    }
-
-    .modal-header p {
-      margin: 6px 0 0;
-      color: var(--muted);
-      font-size: 13px;
-      line-height: 1.5;
-    }
-
-    .modal-locked-note {
-      display: none;
-      margin-top: 10px;
-      padding: 9px 11px;
-      border-radius: 8px;
-      background: #fff3f3;
-      color: #9a2222;
-      font-size: 12px;
-      font-weight: 700;
-    }
-
-    .modal-body {
-      padding: 23px;
-    }
-
-    .email-input-group {
-      direction: ltr;
-      display: flex;
-      align-items: stretch;
-    }
-
-    .email-input-group input {
-      direction: ltr;
-      text-align: left;
-      min-width: 0;
-      border-radius: 9px 0 0 9px;
-    }
-
-    .email-domain {
-      direction: ltr;
-      display: flex;
-      align-items: center;
-      padding: 0 11px;
-      border: 1px solid #cfd1d6;
-      border-left: 0;
-      border-radius: 0 9px 9px 0;
-      background: #f3f3f5;
-      color: #4b4e54;
-      font-size: 13px;
-      white-space: nowrap;
-    }
-
-    .modal-error {
-      display: none;
-      margin-top: 15px;
-      padding: 11px 13px;
-      border-radius: 9px;
-      background: #fff2f0;
-      color: var(--danger);
-      font-size: 13px;
-      line-height: 1.5;
-    }
-
-    .modal-actions {
-      display: flex;
-      gap: 11px;
-      padding: 0 23px 23px;
-    }
-
-    .modal-save,
-    .modal-cancel {
-      padding: 12px 18px;
-      border-radius: 9px;
-      font-size: 14px;
-      font-weight: 700;
-      cursor: pointer;
-    }
-
-    .modal-save {
-      flex: 1;
-      border: 0;
-      background: var(--brand-pink);
-      color: var(--white);
-    }
-
-    .modal-save:hover {
-      background: var(--brand-pink-dark);
-    }
-
-    .modal-cancel {
-      border: 1px solid #d3d4d8;
-      background: #f1f1f3;
-      color: #33353a;
-    }
+    /* === SETTINGS MODAL === */
+    .modal-backdrop { position: fixed; inset: 0; z-index: 1000; display: none; align-items: center; justify-content: center; padding: 18px; background: rgba(17,17,22,0.68); }
+    .modal { width: 100%; max-width: 700px; max-height: 92vh; overflow-y: auto; background: var(--white); border-radius: 16px; box-shadow: 0 24px 70px rgba(0,0,0,0.28); }
+    .modal-header { padding: 21px 23px 17px; border-bottom: 4px solid var(--brand-pink); }
+    .modal-header h2 { margin: 0; font-size: 22px; }
+    .modal-header p { margin: 6px 0 0; color: var(--muted); font-size: 13px; line-height: 1.5; }
+    .modal-locked-note { display: none; margin-top: 10px; padding: 9px 11px; border-radius: 8px; background: #fff3f3; color: #9a2222; font-size: 12px; font-weight: 700; }
+    .modal-body { padding: 23px; }
+    .email-input-group { direction: ltr; display: flex; align-items: stretch; }
+    .email-input-group input { direction: ltr; text-align: left; min-width: 0; border-radius: 9px 0 0 9px; }
+    .email-domain { direction: ltr; display: flex; align-items: center; padding: 0 11px; border: 1px solid #cfd1d6; border-left: 0; border-radius: 0 9px 9px 0; background: #f3f3f5; color: #4b4e54; font-size: 13px; white-space: nowrap; }
+    .modal-error { display: none; margin-top: 15px; padding: 11px 13px; border-radius: 9px; background: #fff2f0; color: var(--danger); font-size: 13px; line-height: 1.5; }
+    .modal-actions { display: flex; gap: 11px; padding: 0 23px 23px; }
+    .modal-save, .modal-cancel { padding: 12px 18px; border-radius: 9px; font-size: 14px; font-weight: 700; cursor: pointer; }
+    .modal-save { flex: 1; border: 0; background: var(--brand-pink); color: var(--white); }
+    .modal-save:hover { background: var(--brand-pink-dark); }
+    .modal-cancel { border: 1px solid #d3d4d8; background: #f1f1f3; color: #33353a; }
 
     @media (max-width: 680px) {
-      body {
-        padding: 10px;
-        align-items: flex-start;
-      }
-
-      .topbar {
-        min-height: 0;
-        padding: 16px;
-      }
-
-      .logo {
-        width: 195px;
-      }
-
-      .settings-button {
-        min-width: 0;
-        padding: 9px 11px;
-        font-size: 13px;
-      }
-
-      .content {
-        padding: 21px 17px;
-      }
-
-      .grid {
-        grid-template-columns: 1fr;
-      }
-
-      .field.full {
-        grid-column: auto;
-      }
-
-      .section {
-        padding: 15px;
-      }
-
-      .modal-actions {
-        flex-direction: column;
-      }
-
-      .email-input-group {
-        flex-direction: column;
-      }
-
-      .email-input-group input {
-        border-radius: 9px 9px 0 0;
-      }
-
-      .email-domain {
-        min-height: 40px;
-        border: 1px solid #cfd1d6;
-        border-top: 0;
-        border-radius: 0 0 9px 9px;
-      }
+      body { padding: 10px; align-items: flex-start; }
+      .topbar { min-height: 0; padding: 16px; }
+      .logo { width: 195px; }
+      .settings-button { min-width: 0; padding: 9px 11px; font-size: 13px; }
+      .content { padding: 21px 17px; }
+      .grid { grid-template-columns: 1fr; }
+      .field.full { grid-column: auto; }
+      .section { padding: 15px; }
+      .modal-actions { flex-direction: column; }
+      .email-input-group { flex-direction: column; }
+      .email-input-group input { border-radius: 9px 9px 0 0; }
+      .email-domain { min-height: 40px; border: 1px solid #cfd1d6; border-top: 0; border-radius: 0 0 9px 9px; }
+      .hub-buttons { gap: 12px; }
+      .hub-btn { padding: 24px 14px; font-size: 14px; }
+      .hub-btn-icon { font-size: 30px; }
+      .confirm-actions { flex-direction: column; align-items: center; }
     }
   </style>
 </head>
-
 <body>
-  <main class="app">
-    <header class="topbar">
-      <img class="logo" src="/sing.png" alt="רמי לוי סטוק">
-      <button type="button" class="settings-button" id="openSettings">
-        ⚙ הגדרות משתמש
-      </button>
-    </header>
 
-    <div class="content">
-      <h1 class="page-title">פתיחת קריאת שירות למחשוב</h1>
-      <p class="page-subtitle">
-        מלאו את פרטי התקלה והמערכת תכין עבורכם הודעת דוא"ל מסודרת.
-      </p>
+<!-- Loading -->
+<div class="loading-overlay" id="loadingOverlay">
+  <div class="loading-box">
+    <div class="spinner"></div>
+    <p style="margin:0;font-size:15px;color:#444">שולח קריאה...</p>
+  </div>
+</div>
 
-      <div id="configurationError" class="error">
-        כתובת הדוא"ל של חברת המחשוב עדיין לא הוגדרה בקובץ.
+<!-- Settings Modal -->
+<div class="modal-backdrop" id="settingsModal">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="settingsTitle">
+    <div class="modal-header">
+      <h2 id="settingsTitle">הגדרות משתמש</h2>
+      <p>יש למלא את כל הפרטים וללחוץ על שמור הגדרות.</p>
+      <div class="modal-locked-note" id="modalLockedNote">בהפעלה הראשונה לא ניתן לסגור את החלון לפני שכל השדות מולאו ונשמרו.</div>
+    </div>
+    <div class="modal-body">
+      <div class="grid">
+        <div class="field">
+          <label for="settingsName">שם מלא <span class="required">*</span></label>
+          <input id="settingsName" type="text" autocomplete="name">
+        </div>
+        <div class="field">
+          <label for="settingsPhone">טלפון <span class="required">*</span></label>
+          <input id="settingsPhone" type="tel" dir="ltr" inputmode="numeric" maxlength="12" placeholder="XXX-XXX-XXXX">
+        </div>
+        <div class="field">
+          <label for="settingsBranch">סניף <span class="required">*</span></label>
+          <select id="settingsBranch">
+            <option value="">בחרו סניף</option>
+            <option>פרדס חנה</option>
+            <option>רמלה</option>
+            <option>מרוחק</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="settingsEmailPrefix">דואר אלקטרוני <span class="required">*</span></label>
+          <div class="email-input-group">
+            <input id="settingsEmailPrefix" type="text" dir="ltr" inputmode="email" autocomplete="username">
+            <span class="email-domain">@Rami-Levy-Stock.co.il</span>
+          </div>
+        </div>
+        <div class="field">
+          <label for="settingsComputerName">שם מחשב <span class="required">*</span></label>
+          <input id="settingsComputerName" type="text" dir="ltr">
+        </div>
+        <div class="field">
+          <label for="settingsIp">כתובת IP <span class="required">*</span></label>
+          <input id="settingsIp" type="text" dir="ltr" placeholder="10.1.10.25">
+        </div>
+        <div class="field">
+          <label for="settingsPrinter">מדפסת ברירת מחדל <span class="required">*</span></label>
+          <input id="settingsPrinter" type="text" placeholder="אם אין, רשמו ללא">
+        </div>
+        <div class="field">
+          <label for="settingsAnyDesk">מספר AnyDesk <span class="required">*</span></label>
+          <input id="settingsAnyDesk" type="text" dir="ltr" inputmode="numeric" placeholder="אם אין, רשמו אין">
+        </div>
       </div>
+      <div id="settingsError" class="modal-error"></div>
+    </div>
+    <div class="modal-actions">
+      <button type="button" class="modal-save" id="saveSettings">שמור הגדרות</button>
+      <button type="button" class="modal-cancel" id="closeSettings">ביטול</button>
+    </div>
+  </div>
+</div>
 
+<!-- VIEW: HUB -->
+<main class="app active" id="view-hub">
+  <header class="topbar">
+    <img class="logo" src="/sing.png" alt="רמי לוי סטוק">
+  </header>
+  <div class="hub-content">
+    <div class="hub-header">
+      <h1 class="hub-greeting" id="hubGreeting">שלום!</h1>
+      <p class="hub-user-info" id="hubUserInfo">טוען מידע...</p>
+    </div>
+
+    <div class="hub-stats">
+      <div class="stat-card stat-open">
+        <div class="stat-label">קריאות פתוחות</div>
+        <div class="stat-number" id="statOpen">-</div>
+      </div>
+      <div class="stat-card stat-progress">
+        <div class="stat-label">בטיפול</div>
+        <div class="stat-number" id="statProgress">-</div>
+      </div>
+      <div class="stat-card stat-closed">
+        <div class="stat-label">סגורות</div>
+        <div class="stat-number" id="statClosed">-</div>
+      </div>
+    </div>
+
+    <div class="hub-chart-container">
+      <canvas id="hubChart" width="180" height="180" style="max-width:100%"></canvas>
+    </div>
+
+    <div class="hub-actions">
+      <button class="hub-btn" onclick="showView('ticket')">
+        <span class="hub-btn-icon">📋</span>
+        פתיחת קריאה
+      </button>
+      <button class="hub-btn" onclick="showView('mytickets')">
+        <span class="hub-btn-icon">📊</span>
+        הקריאות שלי
+      </button>
+      <button class="hub-btn" onclick="showView('sig')">
+        <span class="hub-btn-icon">✍️</span>
+        מחולל חתימות
+      </button>
+      <button class="hub-btn" onclick="openSettings(false)">
+        <span class="hub-btn-icon">⚙️</span>
+        הגדרות
+      </button>
+    </div>
+  </div>
+</main>
+
+<!-- VIEW: TICKET -->
+<main class="app" id="view-ticket">
+  <header class="topbar">
+    <img class="logo" src="/sing.png" alt="רמי לוי סטוק">
+    <div class="topbar-actions">
+      <button type="button" class="back-button" onclick="showView('hub')">← חזור</button>
+      <button type="button" class="settings-button" id="openSettings">⚙ הגדרות משתמש</button>
+    </div>
+  </header>
+  <div class="content">
+    <!-- Form -->
+    <div id="ticketFormContainer">
+      <h1 class="page-title">פתיחת קריאת שירות</h1>
+      <p class="page-subtitle">מלאו את פרטי התקלה ונחזור אליכם בהקדם.</p>
+      <div id="submitError" class="error"></div>
       <form id="supportForm">
         <section class="section">
           <h2 class="section-title">פרטי הפונה והמחשב</h2>
-
           <div class="grid">
-            <div class="field">
-              <label for="employeeName">שם העובד</label>
-              <input id="employeeName" type="text" readonly>
-            </div>
-
-            <div class="field">
-              <label for="phone">טלפון</label>
-              <input id="phone" type="text" dir="ltr" readonly>
-            </div>
-
-            <div class="field">
-              <label for="branch">סניף</label>
-              <input id="branch" type="text" readonly>
-            </div>
-
-            <div class="field">
-              <label for="employeeEmail">דואר אלקטרוני</label>
-              <input id="employeeEmail" type="text" dir="ltr" readonly>
-            </div>
-
-            <div class="field">
-              <label for="computerName">שם מחשב</label>
-              <input id="computerName" type="text" dir="ltr" readonly>
-            </div>
-
-            <div class="field">
-              <label for="ipAddress">כתובת IP</label>
-              <input id="ipAddress" type="text" dir="ltr" readonly>
-            </div>
-
-            <div class="field full">
-              <label for="defaultPrinter">מדפסת ברירת מחדל</label>
-              <input id="defaultPrinter" type="text" readonly>
-            </div>
+            <div class="field"><label for="employeeName">שם העובד</label><input id="employeeName" type="text" readonly></div>
+            <div class="field"><label for="phone">טלפון</label><input id="phone" type="text" dir="ltr" readonly></div>
+            <div class="field"><label for="branch">סניף</label><input id="branch" type="text" readonly></div>
+            <div class="field"><label for="employeeEmail">דואר אלקטרוני</label><input id="employeeEmail" type="text" dir="ltr" readonly></div>
+            <div class="field"><label for="computerName">שם מחשב</label><input id="computerName" type="text" dir="ltr" readonly></div>
+            <div class="field"><label for="ipAddress">כתובת IP</label><input id="ipAddress" type="text" dir="ltr" readonly></div>
+            <div class="field full"><label for="defaultPrinter">מדפסת ברירת מחדל</label><input id="defaultPrinter" type="text" readonly></div>
           </div>
-
-          <p class="profile-note">
-            לשינוי הפרטים יש ללחוץ על „הגדרות משתמש” בראש הדף.
-          </p>
+          <p class="profile-note">לשינוי הפרטים לחץ על הגדרות משתמש בראש הדף.</p>
         </section>
-
         <section class="section">
           <h2 class="section-title">פרטי התקלה</h2>
-
           <div class="grid">
             <div class="field">
-              <label for="category">
-                סוג התקלה <span class="required">*</span>
-              </label>
+              <label for="category">סוג התקלה <span class="required">*</span></label>
               <select id="category" required>
                 <option value="">בחרו סוג תקלה</option>
                 <option>מחשב / Windows</option>
@@ -576,598 +348,421 @@
                 <option>אחר</option>
               </select>
             </div>
-
             <div class="field">
-              <label>
-                דחיפות <span class="required">*</span>
-              </label>
-
-              <div class="urgency-options" role="radiogroup" aria-label="דחיפות">
+              <label>דחיפות <span class="required">*</span></label>
+              <div class="urgency-options" role="radiogroup">
                 <label class="urgency-row urgency-normal">
                   <input type="radio" name="urgency" value="רגילה" checked required>
-                  <span>
-                    <strong>רגילה</strong>
-                    ניתן להמשיך לעבוד
-                  </span>
+                  <span><strong>רגילה</strong>ניתן להמשיך לעבוד</span>
                 </label>
-
                 <label class="urgency-row urgency-high">
                   <input type="radio" name="urgency" value="גבוהה" required>
-                  <span>
-                    <strong>גבוהה</strong>
-                    העבודה נפגעה משמעותית
-                  </span>
+                  <span><strong>גבוהה</strong>העבודה נפגעה משמעותית</span>
                 </label>
-
                 <label class="urgency-row urgency-down">
                   <input type="radio" name="urgency" value="משבית" required>
-                  <span>
-                    <strong>משבית</strong>
-                    לא ניתן לעבוד
-                  </span>
+                  <span><strong>משבית</strong>לא ניתן לעבוד</span>
                 </label>
               </div>
             </div>
-
             <div class="field full">
-              <label for="description">
-                תיאור התקלה <span class="required">*</span>
-              </label>
-              <textarea
-                id="description"
-                required
-                placeholder="תארו מה ניסיתם לעשות, מה קרה בפועל, איזו הודעת שגיאה הופיעה ומתי התקלה התחילה."
-              ></textarea>
+              <label for="description">תיאור התקלה <span class="required">*</span></label>
+              <textarea id="description" required placeholder="תארו מה ניסיתם לעשות, מה קרה בפועל, איזו הודעת שגיאה הופיעה ומתי התקלה התחילה."></textarea>
             </div>
           </div>
         </section>
-
-        <button class="send-button" type="submit">
-          שלח קריאה
-        </button>
-
-        <div class="notice">
-          לאחר לחיצה על „שלח קריאה” תיפתח אוטומטית הודעה חדשה באאוטלוק עם כל הפרטים. ניתן לצרף צילום מסך או קובץ, ולאחר מכן ללחוץ על „שלח” באאוטלוק.
-        </div>
+        <button class="send-button" type="submit" id="submitBtn">שלח קריאה</button>
       </form>
     </div>
-  </main>
-
-  <div class="modal-backdrop" id="settingsModal">
-    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="settingsTitle">
-      <div class="modal-header">
-        <h2 id="settingsTitle">הגדרות משתמש</h2>
-        <p>יש למלא את כל הפרטים וללחוץ על „שמור הגדרות”.</p>
-        <div class="modal-locked-note" id="modalLockedNote">
-          בהפעלה הראשונה לא ניתן לסגור את החלון לפני שכל השדות מולאו ונשמרו.
-        </div>
-      </div>
-
-      <div class="modal-body">
-        <div class="grid">
-          <div class="field">
-            <label for="settingsName">
-              שם מלא <span class="required">*</span>
-            </label>
-            <input id="settingsName" type="text" autocomplete="name">
-          </div>
-
-          <div class="field">
-            <label for="settingsPhone">
-              טלפון <span class="required">*</span>
-            </label>
-            <input
-              id="settingsPhone"
-              type="tel"
-              dir="ltr"
-              inputmode="numeric"
-              autocomplete="tel"
-              maxlength="12"
-              placeholder="XXX-XXX-XXXX"
-            >
-          </div>
-
-          <div class="field">
-            <label for="settingsBranch">
-              סניף <span class="required">*</span>
-            </label>
-            <select id="settingsBranch">
-              <option value="">בחרו סניף</option>
-              <option>פרדס חנה</option>
-              <option>רמלה</option>
-              <option>מרוחק</option>
-            </select>
-          </div>
-
-          <div class="field">
-            <label for="settingsEmailPrefix">
-              דואר אלקטרוני <span class="required">*</span>
-            </label>
-            <div class="email-input-group">
-              <input
-                id="settingsEmailPrefix"
-                type="text"
-                dir="ltr"
-                inputmode="email"
-                autocomplete="username"
-              >
-              <span class="email-domain">@Rami-Levy-Stock.co.il</span>
-            </div>
-          </div>
-
-          <div class="field">
-            <label for="settingsComputerName">
-              שם מחשב <span class="required">*</span>
-            </label>
-            <input id="settingsComputerName" type="text" dir="ltr">
-          </div>
-
-          <div class="field">
-            <label for="settingsIp">
-              כתובת IP <span class="required">*</span>
-            </label>
-            <input id="settingsIp" type="text" dir="ltr" placeholder="10.1.10.25">
-          </div>
-
-          <div class="field">
-            <label for="settingsPrinter">
-              מדפסת ברירת מחדל <span class="required">*</span>
-            </label>
-            <input id="settingsPrinter" type="text" placeholder="אם אין, רשמו ללא">
-          </div>
-
-          <div class="field">
-            <label for="settingsAnyDesk">
-              מספר AnyDesk <span class="required">*</span>
-            </label>
-            <input
-              id="settingsAnyDesk"
-              type="text"
-              dir="ltr"
-              inputmode="numeric"
-              placeholder="אם אין, רשמו אין"
-            >
-          </div>
-        </div>
-
-        <div id="settingsError" class="modal-error"></div>
-      </div>
-
-      <div class="modal-actions">
-        <button type="button" class="modal-save" id="saveSettings">
-          שמור הגדרות
-        </button>
-        <button type="button" class="modal-cancel" id="closeSettings">
-          ביטול
-        </button>
+    <!-- Confirmation -->
+    <div class="confirmation" id="ticketConfirmation">
+      <div class="confirm-icon">✅</div>
+      <h2 class="confirm-title">הקריאה נשלחה בהצלחה!</h2>
+      <div class="confirm-number" id="confirmTicketNumber">TK-...</div>
+      <p class="confirm-subtitle">נשלח אליך מייל אישור. צוות המחשוב יחזור אליך בהקדם.</p>
+      <div class="confirm-actions">
+        <button class="confirm-btn-primary" onclick="openNewTicket()">פתח קריאה נוספת</button>
+        <button class="confirm-btn-secondary" onclick="showView('mytickets')">הקריאות שלי</button>
+        <button class="confirm-btn-secondary" onclick="showView('hub')">חזור לדף הבית</button>
       </div>
     </div>
   </div>
+</main>
 
-  <script>
-    const SUPPORT_EMAIL = "support@Rami-Levy-Stock.co.il";
-    const CC_EMAIL = "eran@Rami-Levy-Stock.co.il";
-    const COMPANY_DOMAIN = "Rami-Levy-Stock.co.il";
-    const STORAGE_KEY = "ramiLevyStockSupportSettingsV4";
+<!-- VIEW: MY TICKETS -->
+<main class="app" id="view-mytickets">
+  <header class="topbar">
+    <img class="logo" src="/sing.png" alt="רמי לוי סטוק">
+    <button type="button" class="back-button" onclick="showView('hub')">← חזור</button>
+  </header>
+  <div class="content">
+    <h1 class="page-title">הקריאות שלי</h1>
+    <p class="page-subtitle">כל קריאות השירות שפתחת</p>
+    <div id="ticketsList"><div class="tickets-loading">טוען קריאות...</div></div>
+  </div>
+</main>
 
-    const form = document.getElementById("supportForm");
-    const modal = document.getElementById("settingsModal");
-    const settingsError = document.getElementById("settingsError");
-    const configurationError = document.getElementById("configurationError");
-    const closeSettingsButton = document.getElementById("closeSettings");
-    const modalLockedNote = document.getElementById("modalLockedNote");
-    const phoneInput = document.getElementById("settingsPhone");
+<!-- VIEW: SIGNATURE -->
+<main class="app" id="view-sig">
+  <header class="topbar">
+    <img class="logo" src="/sing.png" alt="רמי לוי סטוק">
+    <button type="button" class="back-button" onclick="showView('hub')">← חזור</button>
+  </header>
+  <div class="sig-placeholder">
+    <div style="font-size:48px;margin-bottom:16px">✍️</div>
+    <h2 style="margin:0 0 8px;color:#333">מחולל חתימות</h2>
+    <p>הכלי יהיה זמין בקרוב</p>
+  </div>
+</main>
 
-    let settingsLocked = false;
+<script>
+  // ── CONFIGURATION ─────────────────────────────────────────
+  // לאחר פריסת Apps Script: החלף את המחרוזת הריקה ב-URL שקיבלת
+  var APPS_SCRIPT_URL = '';
+  var COMPANY_DOMAIN  = 'Rami-Levy-Stock.co.il';
+  var STORAGE_KEY     = 'ramiLevyStockSupportSettingsV4';
 
-    function clean(value) {
-      return String(value || "").trim();
+  // ── NAVIGATION ────────────────────────────────────────────
+  function showView(id) {
+    document.querySelectorAll('.app').forEach(function(el) { el.classList.remove('active'); });
+    var t = document.getElementById('view-' + id);
+    if (t) t.classList.add('active');
+    if (id === 'ticket') {
+      document.getElementById('ticketFormContainer').style.display = 'block';
+      document.getElementById('ticketConfirmation').classList.remove('visible');
+    }
+    if (id === 'hub') loadHubStats();
+    if (id === 'mytickets') loadMyTickets();
+  }
+
+  function openNewTicket() {
+    document.getElementById('ticketFormContainer').style.display = 'block';
+    document.getElementById('ticketConfirmation').classList.remove('visible');
+    document.getElementById('supportForm').reset();
+    document.getElementById('submitError').style.display = 'none';
+    var first = document.querySelector('input[name="urgency"]');
+    if (first) first.checked = true;
+  }
+
+  // ── UTILITIES ─────────────────────────────────────────────
+  function clean(v) { return String(v || '').trim(); }
+
+  function normalizePhone(v) {
+    var d = String(v || '').replace(/\D/g, '');
+    if (d.startsWith('00972')) d = '0' + d.slice(5);
+    else if (d.startsWith('972')) d = '0' + d.slice(3);
+    if (d.length === 9 && !d.startsWith('0')) d = '0' + d;
+    if (d.length !== 10) return '';
+    return d.slice(0,3) + '-' + d.slice(3,6) + '-' + d.slice(6,10);
+  }
+
+  function formatPhoneTyping(v) {
+    var d = String(v || '').replace(/\D/g, '');
+    if (d.startsWith('972') && d.length > 9) d = '0' + d.slice(3);
+    d = d.slice(0,10);
+    if (d.length <= 3) return d;
+    if (d.length <= 6) return d.slice(0,3) + '-' + d.slice(3);
+    return d.slice(0,3) + '-' + d.slice(3,6) + '-' + d.slice(6);
+  }
+
+  function normalizeEmailPrefix(v) {
+    var p = clean(v).toLowerCase();
+    if (p.includes('@')) p = p.split('@')[0];
+    return p.replace(/\s+/g,'').replace(/[^a-z0-9._-]/g,'');
+  }
+
+  function getFullEmail(prefix) { return prefix ? prefix + '@' + COMPANY_DOMAIN : ''; }
+
+  function getBranchName(code) {
+    return {'pardes-hana':'פרדס חנה','ramla':'רמלה','remote':'מרוחק'}[clean(code).toLowerCase()] || '';
+  }
+
+  // ── SETTINGS ──────────────────────────────────────────────
+  var modal            = document.getElementById('settingsModal');
+  var settingsError    = document.getElementById('settingsError');
+  var closeSettingsBtn = document.getElementById('closeSettings');
+  var modalLockedNote  = document.getElementById('modalLockedNote');
+  var phoneInput       = document.getElementById('settingsPhone');
+  var settingsLocked   = false;
+
+  function getSaved()    { try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}'); } catch(e) { return {}; } }
+  function saveTo(s)     { localStorage.setItem(STORAGE_KEY, JSON.stringify(s)); }
+  function hasRequired(s){ return !!(s.name && s.phone && s.branch && s.emailPrefix && s.computerName && s.ip && s.printer && s.anyDesk); }
+
+  function applySettings(s) {
+    document.getElementById('employeeName').value   = s.name || '';
+    document.getElementById('phone').value          = s.phone || '';
+    document.getElementById('branch').value         = s.branch || '';
+    document.getElementById('employeeEmail').value  = getFullEmail(s.emailPrefix);
+    document.getElementById('computerName').value   = s.computerName || '';
+    document.getElementById('ipAddress').value      = s.ip || '';
+    document.getElementById('defaultPrinter').value = s.printer || '';
+  }
+
+  function fillModal(s) {
+    document.getElementById('settingsName').value        = s.name || '';
+    document.getElementById('settingsPhone').value       = s.phone || '';
+    document.getElementById('settingsBranch').value      = s.branch || '';
+    document.getElementById('settingsEmailPrefix').value = s.emailPrefix || '';
+    document.getElementById('settingsComputerName').value= s.computerName || '';
+    document.getElementById('settingsIp').value          = s.ip || '';
+    document.getElementById('settingsPrinter').value     = s.printer || '';
+    document.getElementById('settingsAnyDesk').value     = s.anyDesk || '';
+  }
+
+  function setLock(locked) {
+    settingsLocked = locked;
+    closeSettingsBtn.style.display  = locked ? 'none'  : 'inline-block';
+    modalLockedNote.style.display   = locked ? 'block' : 'none';
+  }
+
+  function openSettings(force) {
+    settingsError.style.display = 'none'; settingsError.textContent = '';
+    fillModal(getSaved());
+    setLock(Boolean(force) || !hasRequired(getSaved()));
+    modal.style.display = 'flex';
+    document.getElementById('settingsName').focus();
+  }
+
+  function closeSettings() { if (!settingsLocked) modal.style.display = 'none'; }
+
+  phoneInput.addEventListener('input', function() { phoneInput.value = formatPhoneTyping(phoneInput.value); });
+  document.getElementById('settingsEmailPrefix').addEventListener('input', function(e) { e.target.value = normalizeEmailPrefix(e.target.value); });
+  document.getElementById('openSettings').addEventListener('click', function() { openSettings(false); });
+  closeSettingsBtn.addEventListener('click', closeSettings);
+  modal.addEventListener('click', function(e) { if (e.target === modal) closeSettings(); });
+  document.addEventListener('keydown', function(e) { if (e.key === 'Escape' && modal.style.display === 'flex') closeSettings(); });
+
+  document.getElementById('saveSettings').addEventListener('click', function() {
+    var s = {
+      name:         clean(document.getElementById('settingsName').value),
+      phone:        normalizePhone(document.getElementById('settingsPhone').value),
+      branch:       clean(document.getElementById('settingsBranch').value),
+      emailPrefix:  normalizeEmailPrefix(document.getElementById('settingsEmailPrefix').value),
+      computerName: clean(document.getElementById('settingsComputerName').value),
+      ip:           clean(document.getElementById('settingsIp').value),
+      printer:      clean(document.getElementById('settingsPrinter').value),
+      anyDesk:      clean(document.getElementById('settingsAnyDesk').value)
+    };
+    var checks = [
+      [!s.name,         'יש למלא שם מלא.'],
+      [!s.phone,        'יש להזין מספר טלפון בפורמט XXX-XXX-XXXX.'],
+      [!s.branch,       'יש לבחור סניף.'],
+      [!s.emailPrefix,  'יש למלא את קידומת כתובת הדואר האלקטרוני.'],
+      [!s.computerName, 'יש למלא שם מחשב.'],
+      [!s.ip,           'יש למלא כתובת IP.'],
+      [!s.printer,      'יש למלא מדפסת ברירת מחדל. אם אין, רשמו ללא.'],
+      [!s.anyDesk,      'יש למלא מספר AnyDesk. אם אין, רשמו אין.']
+    ];
+    for (var i = 0; i < checks.length; i++) {
+      if (checks[i][0]) { settingsError.textContent = checks[i][1]; settingsError.style.display = 'block'; return; }
+    }
+    saveTo(s); applySettings(s); setLock(false); modal.style.display = 'none';
+  });
+
+  // ── FORM SUBMISSION ───────────────────────────────────────
+  document.getElementById('supportForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    var errEl = document.getElementById('submitError');
+    errEl.style.display = 'none';
+
+    var s = getSaved();
+    if (!hasRequired(s)) { openSettings(true); return; }
+    if (!this.reportValidity()) return;
+
+    var category  = clean(document.getElementById('category').value);
+    var urgencyEl = document.querySelector('input[name="urgency"]:checked');
+    var urgency   = urgencyEl ? urgencyEl.value : '';
+    var desc      = clean(document.getElementById('description').value);
+    if (!urgency) return;
+
+    if (!APPS_SCRIPT_URL) {
+      errEl.textContent = 'שגיאת הגדרות: כתובת השרת לא הוגדרה. פנה למנהל המערכת.';
+      errEl.style.display = 'block'; return;
     }
 
-    function normalizePhone(value) {
-      let digits = String(value || "").replace(/\D/g, "");
+    var btn = document.getElementById('submitBtn');
+    btn.disabled = true;
+    document.getElementById('loadingOverlay').classList.add('visible');
 
-      if (digits.startsWith("00972")) {
-        digits = "0" + digits.slice(5);
-      } else if (digits.startsWith("972")) {
-        digits = "0" + digits.slice(3);
-      }
-
-      if (digits.length === 9 && !digits.startsWith("0")) {
-        digits = "0" + digits;
-      }
-
-      if (digits.length !== 10) {
-        return "";
-      }
-
-      return digits.slice(0, 3) + "-" +
-             digits.slice(3, 6) + "-" +
-             digits.slice(6, 10);
-    }
-
-    function formatPhoneWhileTyping(value) {
-      let digits = String(value || "").replace(/\D/g, "");
-
-      if (digits.startsWith("972") && digits.length > 9) {
-        digits = "0" + digits.slice(3);
-      }
-
-      digits = digits.slice(0, 10);
-
-      if (digits.length <= 3) {
-        return digits;
-      }
-
-      if (digits.length <= 6) {
-        return digits.slice(0, 3) + "-" + digits.slice(3);
-      }
-
-      return digits.slice(0, 3) + "-" +
-             digits.slice(3, 6) + "-" +
-             digits.slice(6);
-    }
-
-    function normalizeEmailPrefix(value) {
-      let prefix = clean(value).toLowerCase();
-
-      if (prefix.includes("@")) {
-        prefix = prefix.split("@")[0];
-      }
-
-      return prefix
-        .replace(/\s+/g, "")
-        .replace(/[^a-z0-9._-]/g, "");
-    }
-
-    function getSavedSettings() {
-      try {
-        return JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
-      } catch (error) {
-        return {};
-      }
-    }
-
-    function saveSettingsLocally(settings) {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(settings));
-    }
-
-    function getFullEmail(prefix) {
-      return prefix ? prefix + "@" + COMPANY_DOMAIN : "";
-    }
-
-    function getBranchName(branchCode) {
-      const branches = {
-        "pardes-hana": "פרדס חנה",
-        "ramla": "רמלה",
-        "remote": "מרוחק"
-      };
-
-      return branches[clean(branchCode).toLowerCase()] || "";
-    }
-
-    function getLaunchData() {
-      const rawHash = window.location.hash.startsWith("#")
-        ? window.location.hash.slice(1)
-        : "";
-
-      const params = new URLSearchParams(rawHash);
-
-      return {
-        mode: clean(params.get("mode")).toLowerCase(),
-        name: clean(params.get("name")),
-        phone: normalizePhone(params.get("phone")),
-        branch: getBranchName(params.get("branch")),
-        emailPrefix: normalizeEmailPrefix(params.get("email")),
-        computerName: clean(params.get("computer")),
-        ip: clean(params.get("ip")),
-        printer: clean(params.get("printer")),
-        anyDesk: clean(params.get("anydesk"))
-      };
-    }
-
-    function mergeLaunchData(settings, launchData) {
-      const merged = { ...settings };
-      const settingKeys = [
-        "name",
-        "phone",
-        "branch",
-        "emailPrefix",
-        "computerName",
-        "ip",
-        "printer",
-        "anyDesk"
-      ];
-
-      settingKeys.forEach(function (key) {
-        if (launchData[key]) {
-          merged[key] = launchData[key];
-        }
+    try {
+      var res = await fetch(APPS_SCRIPT_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain' },
+        body: JSON.stringify({
+          name: s.name, email: getFullEmail(s.emailPrefix), phone: s.phone,
+          branch: s.branch, computerName: s.computerName, ip: s.ip,
+          printer: s.printer, anyDesk: s.anyDesk,
+          category: category, urgency: urgency, description: desc
+        })
       });
+      var result = await res.json();
+      document.getElementById('loadingOverlay').classList.remove('visible');
+      btn.disabled = false;
 
-      return merged;
-    }
-
-    function hasRequiredSettings(settings) {
-      return Boolean(
-        settings.name &&
-        settings.phone &&
-        settings.branch &&
-        settings.emailPrefix &&
-        settings.computerName &&
-        settings.ip &&
-        settings.printer &&
-        settings.anyDesk
-      );
-    }
-
-    function applySettings(settings) {
-      document.getElementById("employeeName").value = settings.name || "";
-      document.getElementById("phone").value = settings.phone || "";
-      document.getElementById("branch").value = settings.branch || "";
-      document.getElementById("employeeEmail").value =
-        getFullEmail(settings.emailPrefix);
-      document.getElementById("computerName").value =
-        settings.computerName || "";
-      document.getElementById("ipAddress").value =
-        settings.ip || "";
-      document.getElementById("defaultPrinter").value =
-        settings.printer || "";
-    }
-
-    function fillSettingsModal(settings) {
-      document.getElementById("settingsName").value = settings.name || "";
-      document.getElementById("settingsPhone").value = settings.phone || "";
-      document.getElementById("settingsBranch").value = settings.branch || "";
-      document.getElementById("settingsEmailPrefix").value =
-        settings.emailPrefix || "";
-      document.getElementById("settingsComputerName").value =
-        settings.computerName || "";
-      document.getElementById("settingsIp").value = settings.ip || "";
-      document.getElementById("settingsPrinter").value =
-        settings.printer || "";
-      document.getElementById("settingsAnyDesk").value =
-        settings.anyDesk || "";
-    }
-
-    function setModalLock(locked) {
-      settingsLocked = locked;
-      closeSettingsButton.style.display = locked ? "none" : "inline-block";
-      modalLockedNote.style.display = locked ? "block" : "none";
-    }
-
-    function openSettings(forceLocked) {
-      settingsError.style.display = "none";
-      settingsError.textContent = "";
-
-      const settings = getSavedSettings();
-      fillSettingsModal(settings);
-
-      setModalLock(Boolean(forceLocked) || !hasRequiredSettings(settings));
-      modal.style.display = "flex";
-      document.getElementById("settingsName").focus();
-    }
-
-    function closeSettings() {
-      if (settingsLocked) {
-        return;
+      if (result.success) {
+        document.getElementById('confirmTicketNumber').textContent = result.ticketNumber;
+        document.getElementById('ticketFormContainer').style.display = 'none';
+        document.getElementById('ticketConfirmation').classList.add('visible');
+      } else {
+        errEl.textContent = 'שגיאה בשליחת הקריאה: ' + (result.error || 'נסה שוב.');
+        errEl.style.display = 'block';
       }
-
-      modal.style.display = "none";
+    } catch(err) {
+      document.getElementById('loadingOverlay').classList.remove('visible');
+      btn.disabled = false;
+      errEl.textContent = 'לא ניתן להתחבר לשרת. בדוק את חיבור האינטרנט ונסה שוב.';
+      errEl.style.display = 'block';
     }
+  });
 
-    function showSettingsError(message) {
-      settingsError.textContent = message;
-      settingsError.style.display = "block";
+  // ── MY TICKETS ────────────────────────────────────────────
+  async function loadMyTickets() {
+    var container = document.getElementById('ticketsList');
+    container.innerHTML = '<div class="tickets-loading">טוען קריאות...</div>';
+    var s = getSaved();
+    var email = getFullEmail(s.emailPrefix);
+    if (!email || !APPS_SCRIPT_URL) {
+      container.innerHTML = '<div class="tickets-loading">לא נמצאו הגדרות משתמש.</div>'; return;
     }
-
-    phoneInput.addEventListener("input", function () {
-      phoneInput.value = formatPhoneWhileTyping(phoneInput.value);
-    });
-
-    document.getElementById("settingsEmailPrefix")
-      .addEventListener("input", function (event) {
-        event.target.value = normalizeEmailPrefix(event.target.value);
+    try {
+      var res = await fetch(APPS_SCRIPT_URL + '?email=' + encodeURIComponent(email));
+      var tickets = await res.json();
+      if (!Array.isArray(tickets) || !tickets.length) {
+        container.innerHTML = '<div class="tickets-loading">לא נמצאו קריאות.</div>'; return;
+      }
+      var list = document.createElement('div');
+      list.className = 'tickets-list';
+      tickets.forEach(function(t) {
+        var sc = t.status === 'סגור' ? 'status-closed' : (t.status === 'בטיפול' ? 'status-progress' : 'status-open');
+        var card = document.createElement('div');
+        card.className = 'ticket-card';
+        card.innerHTML =
+          '<div class="ticket-card-header">' +
+            '<span class="ticket-num">' + t.ticketNumber + '</span>' +
+            '<span class="status-badge ' + sc + '">' + t.status + '</span>' +
+          '</div>' +
+          '<div class="ticket-meta">' + t.date + ' | ' + t.category + ' | ' + t.urgency + '</div>' +
+          (t.notes ? '<div style="margin-top:6px;font-size:13px;color:#555">' + t.notes + '</div>' : '');
+        list.appendChild(card);
       });
+      container.innerHTML = '';
+      container.appendChild(list);
+    } catch(err) {
+      container.innerHTML = '<div class="tickets-loading">שגיאה בטעינת הקריאות.</div>';
+    }
+  }
 
-    document.getElementById("openSettings")
-      .addEventListener("click", function () {
-        openSettings(false);
-      });
+  // ── HUB STATS & CHART ─────────────────────────────────────
+  var chartInstance = null;
 
-    closeSettingsButton.addEventListener("click", closeSettings);
-
-    modal.addEventListener("click", function (event) {
-      if (event.target === modal && !settingsLocked) {
-        closeSettings();
-      }
-    });
-
-    document.addEventListener("keydown", function (event) {
-      if (
-        event.key === "Escape" &&
-        modal.style.display === "flex" &&
-        !settingsLocked
-      ) {
-        closeSettings();
-      }
-    });
-
-    document.getElementById("saveSettings")
-      .addEventListener("click", function () {
-        const settings = {
-          name: clean(document.getElementById("settingsName").value),
-          phone: normalizePhone(
-            document.getElementById("settingsPhone").value
-          ),
-          branch: clean(
-            document.getElementById("settingsBranch").value
-          ),
-          emailPrefix: normalizeEmailPrefix(
-            document.getElementById("settingsEmailPrefix").value
-          ),
-          computerName: clean(
-            document.getElementById("settingsComputerName").value
-          ),
-          ip: clean(
-            document.getElementById("settingsIp").value
-          ),
-          printer: clean(
-            document.getElementById("settingsPrinter").value
-          ),
-          anyDesk: clean(
-            document.getElementById("settingsAnyDesk").value
-          )
-        };
-
-        if (!settings.name) {
-          showSettingsError("יש למלא שם מלא.");
-          return;
-        }
-
-        if (!settings.phone) {
-          showSettingsError("יש להזין מספר טלפון בפורמט XXX-XXX-XXXX.");
-          return;
-        }
-
-        if (!settings.branch) {
-          showSettingsError("יש לבחור סניף.");
-          return;
-        }
-
-        if (!settings.emailPrefix) {
-          showSettingsError("יש למלא את קידומת כתובת הדואר האלקטרוני.");
-          return;
-        }
-
-        if (!settings.computerName) {
-          showSettingsError("יש למלא שם מחשב.");
-          return;
-        }
-
-        if (!settings.ip) {
-          showSettingsError("יש למלא כתובת IP.");
-          return;
-        }
-
-        if (!settings.printer) {
-          showSettingsError("יש למלא מדפסת ברירת מחדל. אם אין, רשמו ללא.");
-          return;
-        }
-
-        if (!settings.anyDesk) {
-          showSettingsError("יש למלא מספר AnyDesk. אם אין, רשמו אין.");
-          return;
-        }
-
-        saveSettingsLocally(settings);
-        applySettings(settings);
-
-        setModalLock(false);
-        modal.style.display = "none";
-      });
-
-    form.addEventListener("submit", function (event) {
-      event.preventDefault();
-      configurationError.style.display = "none";
-
-      if (!SUPPORT_EMAIL) {
-        configurationError.style.display = "block";
-        return;
-      }
-
-      const settings = getSavedSettings();
-
-      if (!hasRequiredSettings(settings)) {
-        openSettings(true);
-        return;
-      }
-
-      if (!form.reportValidity()) {
-        return;
-      }
-
-      const category = clean(document.getElementById("category").value);
-      const urgencyInput =
-        document.querySelector('input[name="urgency"]:checked');
-      const urgency = urgencyInput ? urgencyInput.value : "";
-      const description =
-        clean(document.getElementById("description").value);
-      const fullEmail = getFullEmail(settings.emailPrefix);
-
-      if (!urgency) {
-        return;
-      }
-
-      const dateTime = new Intl.DateTimeFormat("he-IL", {
-        dateStyle: "short",
-        timeStyle: "short"
-      }).format(new Date());
-
-      const subject =
-        "[קריאת שירות] " +
-        urgency +
-        " | " +
-        category +
-        " | " +
-        settings.name;
-
-      const bodyLines = [
-        "שלום,",
-        "",
-        "אבקש לפתוח קריאת שירות לפי הפרטים הבאים:",
-        "",
-        "שם העובד: " + settings.name,
-        "טלפון: " + settings.phone,
-        "דואר אלקטרוני: " + fullEmail,
-        "סניף: " + settings.branch,
-        "שם מחשב: " + settings.computerName,
-        "כתובת IP: " + settings.ip,
-        "מדפסת ברירת מחדל: " + settings.printer,
-        "מספר AnyDesk: " + settings.anyDesk,
-        "סוג התקלה: " + category,
-        "דחיפות: " + urgency,
-        "תאריך ושעה: " + dateTime,
-        "",
-        "תיאור התקלה:",
-        description,
-        "",
-        "תודה."
-      ];
-
-      const parameters = new URLSearchParams();
-      parameters.set("subject", subject);
-      parameters.set("body", bodyLines.join("\r\n"));
-
-      if (CC_EMAIL) {
-        parameters.set("cc", CC_EMAIL);
-      }
-
-      window.location.href =
-        "mailto:" + SUPPORT_EMAIL + "?" + parameters.toString();
-    });
-
-    const launchData = getLaunchData();
-    const requestedMode = launchData.mode;
-    const savedSettings =
-      mergeLaunchData(getSavedSettings(), launchData);
-
-    saveSettingsLocally(savedSettings);
-    applySettings(savedSettings);
-
-    if (window.location.hash) {
-      history.replaceState(
-        null,
-        "",
-        window.location.pathname + window.location.search
-      );
+  function drawChart(data) {
+    var canvas = document.getElementById('hubChart');
+    if (!canvas) return;
+    var ctx = canvas.getContext('2d');
+    var total = data.open + data.progress + data.closed;
+    if (total === 0) {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = '#ccc';
+      ctx.font = 'bold 14px Arial';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText('אין קריאות', canvas.width / 2, canvas.height / 2);
+      return;
     }
 
-    if (!hasRequiredSettings(savedSettings)) {
-      openSettings(true);
-    } else if (requestedMode === "settings") {
-      openSettings(false);
+    var cx = canvas.width / 2, cy = canvas.height / 2, r = 55;
+    var colors = ['#f59e0b', '#3b82f6', '#10b981'];
+    var values = [data.open, data.progress, data.closed];
+    var labels = ['פתוחה', 'בטיפול', 'סגורה'];
+    var start = -Math.PI / 2;
+
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    for (var i = 0; i < 3; i++) {
+      var angle = (values[i] / total) * 2 * Math.PI;
+      ctx.fillStyle = colors[i];
+      ctx.beginPath();
+      ctx.arc(cx, cy, r, start, start + angle);
+      ctx.lineTo(cx, cy);
+      ctx.fill();
+      start += angle;
     }
-  </script>
+
+    ctx.fillStyle = '#fff';
+    ctx.beginPath();
+    ctx.arc(cx, cy, 38, 0, 2 * Math.PI);
+    ctx.fill();
+
+    ctx.fillStyle = '#333';
+    ctx.font = 'bold 20px Arial';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(total.toString(), cx, cy - 5);
+    ctx.font = '11px Arial';
+    ctx.fillStyle = '#777';
+    ctx.fillText('סה״כ קריאות', cx, cy + 12);
+  }
+
+  async function loadHubStats() {
+    var s = getSaved();
+    var greeting = document.getElementById('hubGreeting');
+    var userInfo = document.getElementById('hubUserInfo');
+
+    greeting.textContent = (s.name ? 'שלום, ' + s.name : 'שלום!');
+    userInfo.textContent = s.branch ? 'סניף: ' + s.branch : 'עדכן את הגדרותיך';
+
+    if (!APPS_SCRIPT_URL) {
+      document.getElementById('statOpen').textContent = '-';
+      document.getElementById('statProgress').textContent = '-';
+      document.getElementById('statClosed').textContent = '-';
+      drawChart({ open: 0, progress: 0, closed: 0 });
+      return;
+    }
+
+    try {
+      var res = await fetch(APPS_SCRIPT_URL + '?action=stats');
+      var data = await res.json();
+      if (data && typeof data === 'object') {
+        var open = data.open || 0;
+        var progress = data.progress || 0;
+        var closed = data.closed || 0;
+        document.getElementById('statOpen').textContent = open;
+        document.getElementById('statProgress').textContent = progress;
+        document.getElementById('statClosed').textContent = closed;
+        drawChart({ open: open, progress: progress, closed: closed });
+      }
+    } catch(err) {
+      console.log('Stats load failed:', err);
+      document.getElementById('statOpen').textContent = '-';
+      document.getElementById('statProgress').textContent = '-';
+      document.getElementById('statClosed').textContent = '-';
+    }
+  }
+
+  // ── INIT ──────────────────────────────────────────────────
+  (function init() {
+    var raw = window.location.hash.startsWith('#') ? window.location.hash.slice(1) : '';
+    var p   = new URLSearchParams(raw);
+    var launch = {
+      mode:         clean(p.get('mode')).toLowerCase(),
+      name:         clean(p.get('name')),
+      phone:        normalizePhone(p.get('phone')),
+      branch:       getBranchName(p.get('branch')),
+      emailPrefix:  normalizeEmailPrefix(p.get('email')),
+      computerName: clean(p.get('computer')),
+      ip:           clean(p.get('ip')),
+      printer:      clean(p.get('printer')),
+      anyDesk:      clean(p.get('anydesk'))
+    };
+    var saved = getSaved();
+    Object.keys(launch).forEach(function(k) { if (launch[k]) saved[k] = launch[k]; });
+    saveTo(saved);
+    applySettings(saved);
+    if (raw) history.replaceState(null, '', window.location.pathname + window.location.search);
+    if (!hasRequired(saved)) openSettings(true);
+    else if (launch.mode === 'settings') openSettings(false);
+    loadHubStats();
+  })();
+</script>
 </body>
 </html>
