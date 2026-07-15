@@ -307,7 +307,6 @@
     <img class="logo" src="/sing.png" alt="רמי לוי סטוק">
     <div class="topbar-actions">
       <button type="button" class="back-button" onclick="showView('hub')">← חזור</button>
-      <button type="button" class="settings-button" id="openSettings">⚙ הגדרות משתמש</button>
     </div>
   </header>
   <div class="content">
@@ -318,7 +317,10 @@
       <div id="submitError" class="error"></div>
       <form id="supportForm">
         <section class="section">
-          <h2 class="section-title">פרטי הפונה והמחשב</h2>
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:15px">
+            <h2 class="section-title" style="margin:0">פרטי הפונה והמחשב</h2>
+            <button type="button" style="padding:8px 12px;border:1px solid var(--border);border-radius:8px;background:var(--white);cursor:pointer;font-size:18px" onclick="openSettings(false)" title="עריכת הגדרות">✏️</button>
+          </div>
           <div class="grid">
             <div class="field"><label for="employeeName">שם העובד</label><input id="employeeName" type="text" readonly></div>
             <div class="field"><label for="phone">טלפון</label><input id="phone" type="text" dir="ltr" readonly></div>
@@ -393,7 +395,9 @@
 <main class="app" id="view-mytickets">
   <header class="topbar">
     <img class="logo" src="/sing.png" alt="רמי לוי סטוק">
-    <button type="button" class="back-button" onclick="showView('hub')">← חזור</button>
+    <div class="topbar-actions">
+      <button type="button" class="back-button" onclick="showView('hub')">← חזור</button>
+    </div>
   </header>
   <div class="content">
     <h1 class="page-title">הקריאות שלי</h1>
@@ -401,6 +405,23 @@
     <div id="ticketsList"><div class="tickets-loading">טוען קריאות...</div></div>
   </div>
 </main>
+
+<!-- TICKET DETAIL MODAL -->
+<div class="modal-backdrop" id="ticketDetailBackdrop">
+  <div class="modal" style="max-width: 600px;">
+    <div class="modal-header">
+      <h2 id="ticketDetailNumber">TK-0001</h2>
+      <p id="ticketDetailStatus" style="margin:6px 0 0;padding:0">סטטוס</p>
+    </div>
+    <div class="modal-body">
+      <div id="ticketDetailContent"></div>
+    </div>
+    <div class="modal-actions">
+      <button type="button" class="modal-save" id="editTicketBtn" onclick="openEditTicket()">עדכן קריאה</button>
+      <button type="button" class="modal-cancel" onclick="closeTicketDetail()">סגור</button>
+    </div>
+  </div>
+</div>
 
 <!-- VIEW: SIGNATURE -->
 <main class="app" id="view-sig">
@@ -615,7 +636,91 @@
     }
   });
 
+  // ── FORMAT DATE ────────────────────────────────────────────
+  function formatDisplayDate(dateStr) {
+    try {
+      var d = new Date(dateStr);
+      return Utilities ?
+        Utilities.formatDate(d, 'Asia/Jerusalem', 'dd/MM/yyyy HH:mm') :
+        d.toLocaleDateString('he-IL') + ' ' + d.toLocaleTimeString('he-IL', {hour:'2-digit', minute:'2-digit'});
+    } catch(e) {
+      return dateStr;
+    }
+  }
+
   // ── MY TICKETS ────────────────────────────────────────────
+  var currentTicketDetail = null;
+
+  function formatDisplayDateClient(dateStr) {
+    try {
+      var d = new Date(dateStr);
+      var day = String(d.getDate()).padStart(2, '0');
+      var month = String(d.getMonth() + 1).padStart(2, '0');
+      var year = d.getFullYear();
+      var hours = String(d.getHours()).padStart(2, '0');
+      var mins = String(d.getMinutes()).padStart(2, '0');
+      return day + '/' + month + '/' + year + ' ' + hours + ':' + mins;
+    } catch(e) {
+      return dateStr;
+    }
+  }
+
+  function showTicketDetail(ticket) {
+    currentTicketDetail = ticket;
+    document.getElementById('ticketDetailNumber').textContent = ticket.ticketNumber;
+    var statusColor = ticket.status === 'סגור' ? '#0a7d4b' : (ticket.status === 'בטיפול' ? '#004085' : '#856404');
+    document.getElementById('ticketDetailStatus').innerHTML =
+      '<span class="status-badge" style="display:inline-block;padding:4px 12px;background:' +
+      (ticket.status === 'סגור' ? '#d4edda;color:#155724' : (ticket.status === 'בטיפול' ? '#cce5ff;color:#004085' : '#fff3cd;color:#856404')) +
+      '">' + ticket.status + '</span>';
+
+    var content = '<div style="display:grid;gap:12px">' +
+      '<div><strong>קטגוריה:</strong> ' + ticket.category + '</div>' +
+      '<div><strong>דחיפות:</strong> ' + ticket.urgency + '</div>' +
+      '<div><strong>מחשב:</strong> ' + ticket.computerName + ' | IP: ' + ticket.ip + '</div>' +
+      '<div><strong>תאריך פתיחה:</strong> ' + formatDisplayDateClient(ticket.date) + '</div>' +
+      '<div><strong>תיאור:</strong><br><span style="white-space:pre-wrap;color:#555">' + clean(ticket.description) + '</span></div>' +
+      (ticket.notes ? '<div><strong>הערות:</strong><br><span style="white-space:pre-wrap;color:#0a7d4b">' + ticket.notes + '</span></div>' : '') +
+      '</div>';
+
+    document.getElementById('ticketDetailContent').innerHTML = content;
+    document.getElementById('ticketDetailBackdrop').style.display = 'flex';
+  }
+
+  function closeTicketDetail() {
+    document.getElementById('ticketDetailBackdrop').style.display = 'none';
+    currentTicketDetail = null;
+  }
+
+  function openEditTicket() {
+    if (!currentTicketDetail || !APPS_SCRIPT_URL) return;
+    var notes = prompt('הערות/עדכון לקריאה:', currentTicketDetail.notes || '');
+    if (notes === null) return;
+
+    closeTicketDetail();
+    var data = {
+      action: 'update',
+      ticketNumber: currentTicketDetail.ticketNumber,
+      notes: notes,
+      email: getFullEmail(getSaved().emailPrefix)
+    };
+
+    fetch(APPS_SCRIPT_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain' },
+      body: JSON.stringify(data)
+    }).then(function(res) { return res.json(); })
+      .then(function(result) {
+        if (result.success) {
+          alert('הקריאה עודכנה בהצלחה');
+          loadMyTickets();
+        } else {
+          alert('שגיאה בעדכון: ' + (result.error || 'נסה שוב'));
+        }
+      })
+      .catch(function() { alert('שגיאה בחיבור לשרת'); });
+  }
+
   async function loadMyTickets() {
     var container = document.getElementById('ticketsList');
     container.innerHTML = '<div class="tickets-loading">טוען קריאות...</div>';
@@ -636,13 +741,16 @@
         var sc = t.status === 'סגור' ? 'status-closed' : (t.status === 'בטיפול' ? 'status-progress' : 'status-open');
         var card = document.createElement('div');
         card.className = 'ticket-card';
+        card.style.cursor = 'pointer';
+        var formattedDate = formatDisplayDateClient(t.date);
         card.innerHTML =
           '<div class="ticket-card-header">' +
             '<span class="ticket-num">' + t.ticketNumber + '</span>' +
             '<span class="status-badge ' + sc + '">' + t.status + '</span>' +
           '</div>' +
-          '<div class="ticket-meta">' + t.date + ' | ' + t.category + ' | ' + t.urgency + '</div>' +
+          '<div class="ticket-meta">' + formattedDate + ' | ' + t.category + ' | ' + t.urgency + '</div>' +
           (t.notes ? '<div style="margin-top:6px;font-size:13px;color:#555">' + t.notes + '</div>' : '');
+        card.onclick = function() { showTicketDetail(t); };
         list.appendChild(card);
       });
       container.innerHTML = '';
@@ -651,6 +759,10 @@
       container.innerHTML = '<div class="tickets-loading">שגיאה בטעינת הקריאות.</div>';
     }
   }
+
+  document.getElementById('ticketDetailBackdrop').addEventListener('click', function(e) {
+    if (e.target === this) closeTicketDetail();
+  });
 
   // ── HUB STATS & CHART ─────────────────────────────────────
   var chartInstance = null;
